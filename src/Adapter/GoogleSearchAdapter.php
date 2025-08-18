@@ -10,8 +10,8 @@ class GoogleSearchAdapter extends AbstractAdapter implements AdapterInterface
 {
 
     private Client $client;
-    private string $apiKey = 'AIzaSyAjwlbRpxGx7wEtxvyoMJKvY7izbJ6xLVc';
-    private string $searchEngineId = '94cc08161df2549db';
+    private string $apiKey = '';
+    private string $searchEngineId = '';
 
     /** @var string[] */
     private array $excludedSites = [

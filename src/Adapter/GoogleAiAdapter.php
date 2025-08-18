@@ -7,7 +7,7 @@ use Exception;
 
 class GoogleAiAdapter extends AbstractAdapter implements AdapterInterface
 {
-    private const string API_KEY = 'AIzaSyBFO2-GstfLOf8fgRlGgukUpkqVEKyXmeM';
+    private const string API_KEY = '';
 
     public function __construct(
         protected ?string $model = 'gemini-2.0-flash',
