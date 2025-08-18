@@ -31,7 +31,9 @@ class Pipe
         $this->receipt = new Receipt();
     }
 
-    public static function create(?string $alias = null): static
+    public static function create(
+        ?string $alias = null,
+    ): static
     {
         $element = new static();
         $element->setAlias($alias);
