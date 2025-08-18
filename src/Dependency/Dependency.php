@@ -13,7 +13,11 @@ class Dependency
     private StrategyInterface $strategy;
     private ?string $alias;
 
-    public function __construct(SequenceInterface $sequence, string|StrategyInterface $strategy, string $alias)
+    public function __construct(
+        SequenceInterface        $sequence,
+        string|StrategyInterface $strategy,
+        string                   $alias
+    )
     {
         $this->setStrategy($strategy);
         $this->setSequence($sequence);
@@ -26,33 +30,11 @@ class Dependency
         string                   $alias
     ): self
     {
-        return new self($sequence, $strategy, $alias);
-    }
-
-    public function getSequence(): SequenceInterface
-    {
-        return $this->sequence;
-    }
-
-    public function getStrategy(): StrategyInterface
-    {
-        return $this->strategy;
-    }
-
-    public function getResult(): mixed
-    {
-        return $this->strategy->process($this->sequence->getData());
-    }
-
-    public function getAlias(): ?string
-    {
-        return $this->alias;
-    }
-
-    public function setSequence(SequenceInterface $sequence): self
-    {
-        $this->sequence = $sequence;
-        return $this;
+        return new self(
+            sequence: $sequence,
+            strategy: $strategy,
+            alias: $alias
+        );
     }
 
     /**
@@ -79,6 +61,35 @@ class Dependency
     public function setAlias(string $alias): self
     {
         $this->alias = $alias;
+        return $this;
+    }
+
+
+    public function getSequence(): SequenceInterface
+    {
+        return $this->sequence;
+    }
+
+    public function getStrategy(): StrategyInterface
+    {
+        return $this->strategy;
+    }
+
+    public function getResult(): mixed
+    {
+        // TODO
+        // return $this->strategy->process($this->sequence->getData());
+        return null;
+    }
+
+    public function getAlias(): ?string
+    {
+        return $this->alias;
+    }
+
+    public function setSequence(SequenceInterface $sequence): self
+    {
+        $this->sequence = $sequence;
         return $this;
     }
 }

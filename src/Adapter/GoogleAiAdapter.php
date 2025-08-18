@@ -13,8 +13,8 @@ class GoogleAiAdapter implements AdapterInterface
 
     public function __construct(
         private ?string $apiKey = null,
-        private ?string $model = 'gemini-2.0-flash',
-        private ?string $voice = 'google-voice-3'
+        private ?string $model = null,
+        private ?string $voice = null
     )
     {
         Cf::autoload($this);
@@ -22,8 +22,8 @@ class GoogleAiAdapter implements AdapterInterface
 
     public static function create(
         ?string $apiKey = null,
-        ?string $model = 'gemini-2.0-flash',
-        ?string $voice = 'google-voice-3'
+        ?string $model = null,
+        ?string $voice = null
     ): static
     {
         return new static(
@@ -70,6 +70,7 @@ class GoogleAiAdapter implements AdapterInterface
         $response = json_decode($response, true);
         $this->fullResponse = $response;
 
+        // TODO
         // $response['usageMetadata']['totalTokenCount'] ?? 0;
         // $this->logTokenUsage();
 
@@ -111,6 +112,7 @@ class GoogleAiAdapter implements AdapterInterface
         return sprintf("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=", $this->model);
     }
 
+    // TODO
     public function getFullResponse(): mixed
     {
         return $this->fullResponse;

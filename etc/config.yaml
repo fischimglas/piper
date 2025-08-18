@@ -2,11 +2,37 @@ GoogleAiAdapter:
   apiKey: your-google-api-key
 
 GoogleSearchAdapter:
+  apiUrl: https://www.googleapis.com/customsearch/v1
   apiKey: your-google-api-key
   searchEngineId: your-search-engine-id
+  excludedSites:
+    - facebook.com
+    - twitter.com
+    - instagram.com
+    - paropakaram.com
+    - youtube.com
+    - pinterest.com
+    - linkedin.com
+    - reddit.com
+    - quora.com
+    - tiktok.com
+    - amazon.com
+    - ebay.com
+    - alibaba.com
+    - aliexpress.com
+    - etsy.com
+    - walmart.com
+    - bestbuy.com
+    - target.com
+    - flipkart.com
+    - snapdeal.com
+    - olx.in
+    - quikr.com
 
 OpenAiAdapter:
   apiKey: your-openai-api-key
+  model: gemini-2.0-flash
+  voice: google-voice-3
 
 DeeplAdapter:
   apiKey: your-deepl-api-key

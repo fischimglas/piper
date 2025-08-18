@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Piper\Core;
 
-use Piper\Attributes\ConfigAutoload;
 use ReflectionClass;
 use RuntimeException;
 
@@ -63,14 +62,6 @@ class Cf
     {
         $ref = new ReflectionClass($instance);
         $configKey = $ref->getShortName();
-        $attrs = $ref->getAttributes(ConfigAutoload::class);
-        if ($attrs) {
-            $meta = $attrs[0]->newInstance();
-            if (!empty($meta->configKey)) {
-                $configKey = $meta->configKey;
-            }
-        }
-
         $config = Cf::get($configKey);
         if (!is_array($config)) {
             return;

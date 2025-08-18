@@ -44,16 +44,6 @@ class ReaderAdapter implements AdapterInterface
         throw new RuntimeException("ReaderAdapter: Cannot read input: $input");
     }
 
-    private function readUrl(string $url): string
-    {
-        try {
-            $response = $this->client->get($url);
-            return (string)$response->getBody();
-        } catch (GuzzleException $e) {
-            throw new RuntimeException("Failed to fetch URL: $url. " . $e->getMessage());
-        }
-    }
-
     public function getFilePath(): ?string
     {
         return $this->filePath;
@@ -62,5 +52,15 @@ class ReaderAdapter implements AdapterInterface
     public function setFilePath(?string $filePath): void
     {
         $this->filePath = $filePath;
+    }
+
+    private function readUrl(string $url): string
+    {
+        try {
+            $response = $this->client->get($url);
+            return (string)$response->getBody();
+        } catch (GuzzleException $e) {
+            throw new RuntimeException("Failed to fetch URL: $url. " . $e->getMessage());
+        }
     }
 }

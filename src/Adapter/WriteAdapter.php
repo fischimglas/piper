@@ -8,16 +8,16 @@ use Piper\Core\Cf;
 class WriteAdapter implements AdapterInterface
 {
     public function __construct(
-        private string $path = '/tmp',
-        private string $filename = 'random.txt'
+        private string  $filename,
+        private ?string $path = null,
     )
     {
         Cf::autoload($this);
     }
 
     public static function create(
-        string $path = '/tmp',
-        string $filename = 'random.txt'
+        string  $filename,
+        ?string $path = null,
     ): static
     {
         return new static($path, $filename);
