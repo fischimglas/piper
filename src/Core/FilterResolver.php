@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Piper\Core;
 
-use Piper\Filter\FilterInterface;
+use Piper\Contracts\FilterInterface;
 use RuntimeException;
 
 class FilterResolver

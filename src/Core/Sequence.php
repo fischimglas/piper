@@ -1,15 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Piper\Sequence;
+namespace Piper\Core;
 
-use Piper\Adapter\AdapterInterface;
-use Piper\Core\FilterResolver;
-use Piper\Core\Receipt;
-use Piper\Core\TemplateResolver;
-use Piper\Dependency\Dependency;
-use Piper\Filter\FilterInterface;
-use Piper\Strategy\StrategyInterface;
+use Piper\Contracts\AdapterInterface;
+use Piper\Contracts\FilterInterface;
+use Piper\Contracts\SequenceInterface;
+use Piper\Contracts\StrategyInterface;
 
 class Sequence implements SequenceInterface
 {

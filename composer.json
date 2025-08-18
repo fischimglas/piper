@@ -1,5 +1,6 @@
 {
   "name": "jam/piper",
+  "version": "0.0.1",
   "autoload": {
     "psr-4": {
       "Piper\\": "src/"
@@ -8,7 +9,7 @@
   "authors": [
     {
       "name": "Jvo Maurer",
-      "email": "jvo.maurer@usystems.ch"
+      "email": "jvo.maurer@gmail.com"
     }
   ],
   "require": {
@@ -19,10 +20,10 @@
     "ext-imagick": "*",
     "ext-dom": "*",
     "ext-curl": "*",
+    "ext-http": "*",
     "deeplcom/deepl-php": "^1.12",
     "symfony/http-client": "^7.3",
     "nyholm/psr7": "^1.8",
-    "ext-http": "*",
     "guzzlehttp/guzzle": "^7.9"
   },
   "config": {

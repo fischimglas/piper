@@ -1,3 +1,10 @@
+defaults:
+  aiText: GoogleAiAdapter
+  aiAudio: GoogleAiAdapter
+  search: GoogleSearchAdapter
+  translate: DeeplAdapter
+  writer: WriteAdapter
+
 GoogleAiAdapter:
   apiKey: your-google-api-key
   model: gemini-2.0-flash

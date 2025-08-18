@@ -2,6 +2,7 @@
 
 namespace Piper\Strategy;
 
+use Piper\Contracts\StrategyInterface;
 use Piper\Utils\CreateTrait;
 
 class WholeResultStrategy implements StrategyInterface

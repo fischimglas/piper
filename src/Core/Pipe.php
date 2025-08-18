@@ -14,8 +14,7 @@ declare(strict_types=1);
 namespace Piper\Core;
 
 
-use Piper\Sequence\Sequence;
-use Piper\Sequence\SequenceInterface;
+use Piper\Contracts\SequenceInterface;
 use RuntimeException;
 
 class Pipe

@@ -6,8 +6,18 @@ declare(strict_types=1);
 
 namespace Piper\Filter;
 
+use Piper\Contracts\FilterInterface;
+use Piper\Core\AbstractFilter;
+
 class ArrayCustomFilter extends AbstractFilter implements FilterInterface
 {
+    public function __construct(
+        private ?bool $unique = false,
+        private ?bool $trim = false,
+        private ?bool $removeEmpty = false)
+    {
+    }
+
     public static function create(
         ?bool $unique = false,
         ?bool $trim = false,
@@ -34,14 +44,6 @@ class ArrayCustomFilter extends AbstractFilter implements FilterInterface
         }
 
         return $input;
-    }
-
-
-    public function __construct(
-        private ?bool $unique = false,
-        private ?bool $trim = false,
-        private ?bool $removeEmpty = false)
-    {
     }
 
 
@@ -77,6 +79,4 @@ class ArrayCustomFilter extends AbstractFilter implements FilterInterface
     {
         return $this->removeEmpty;
     }
-
-
 }

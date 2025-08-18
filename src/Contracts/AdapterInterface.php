@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Piper\Adapter;
+namespace Piper\Contracts;
 
 interface AdapterInterface
 {

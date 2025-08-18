@@ -5,6 +5,7 @@ namespace Piper\Adapter;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Piper\Contracts\AdapterInterface;
 use Piper\Core\Cf;
 use RuntimeException;
 

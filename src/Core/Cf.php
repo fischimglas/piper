@@ -14,6 +14,7 @@ namespace Piper\Core;
 
 use ReflectionClass;
 use RuntimeException;
+use function yaml_parse_file;
 
 class Cf
 {
@@ -26,7 +27,7 @@ class Cf
         if (!file_exists(self::CONFIG_FILE)) {
             throw new RuntimeException(sprintf("Configuration file not found: %s", self::CONFIG_FILE));
         }
-        $config = \yaml_parse_file(self::CONFIG_FILE);
+        $config = yaml_parse_file(self::CONFIG_FILE);
         if ($config === false) {
             throw new RuntimeException(sprintf("Failed to parse configuration file: %s", self::CONFIG_FILE));
         }

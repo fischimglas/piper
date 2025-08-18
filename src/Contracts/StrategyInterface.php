@@ -1,6 +1,6 @@
 <?php
 
-namespace Piper\Strategy;
+namespace Piper\Contracts;
 
 interface StrategyInterface
 {

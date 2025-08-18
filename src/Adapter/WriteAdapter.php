@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Piper\Adapter;
 
+use Piper\Contracts\AdapterInterface;
 use Piper\Core\Cf;
 
 class WriteAdapter implements AdapterInterface

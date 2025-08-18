@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Piper\Adapter;
 
 use Exception;
+use Piper\Contracts\AdapterInterface;
 use Piper\Core\Cf;
 
 class GoogleAiAdapter implements AdapterInterface

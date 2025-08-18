@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Piper\Dependency;
+namespace Piper\Core;
 
-use Piper\Sequence\SequenceInterface;
-use Piper\Strategy\StrategyInterface;
+use Piper\Contracts\SequenceInterface;
+use Piper\Contracts\StrategyInterface;
 use RuntimeException;
 
 class Dependency

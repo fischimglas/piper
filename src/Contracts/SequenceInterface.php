@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Piper\Sequence;
+namespace Piper\Contracts;
 
-use Piper\Dependency\Dependency;
+use Piper\Core\Dependency;
 
 interface SequenceInterface
 {

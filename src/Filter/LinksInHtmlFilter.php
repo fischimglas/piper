@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Piper\Filter;
 
+use Piper\Contracts\FilterInterface;
 use Piper\Core\DataFormat;
 use Piper\Utils\CreateTrait;
 

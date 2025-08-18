@@ -10,11 +10,11 @@ use Piper\Adapter\GoogleSearchAdapter;
 use Piper\Adapter\ReaderAdapter;
 use Piper\Adapter\WriteAdapter;
 use Piper\Core\Pipe;
+use Piper\Core\Sequence;
 use Piper\Filter\ArrayMergeFilter;
 use Piper\Filter\ArrayUnique;
 use Piper\Filter\JsonDecodeFilter;
 use Piper\Filter\LinksInHtmlFilter;
-use Piper\Sequence\Sequence;
 use Piper\Strategy\PerItemStrategy;
 use Piper\Strategy\WholeResultStrategy;
 
