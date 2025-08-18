@@ -3,19 +3,13 @@ declare(strict_types=1);
 
 namespace Piper\Filter;
 
-use Piper\Model\DataFormat;
+use Piper\Core\DataFormat;
+use Piper\Utils\CreateTrait;
 
 class LinksInHtmlFilter implements FilterInterface
 {
 
-    public function __construct()
-    {
-    }
-
-    public static function create(): static
-    {
-        return new static();
-    }
+    use CreateTrait;
 
     public function format(mixed $input): mixed
     {

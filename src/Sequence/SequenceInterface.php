@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Piper\Sequence;
 
-use Piper\Model\Dependency;
+use Piper\Dependency\Dependency;
 
 interface SequenceInterface
 {

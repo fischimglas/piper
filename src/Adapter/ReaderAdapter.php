@@ -5,13 +5,16 @@ namespace Piper\Adapter;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Piper\Core\Cf;
 use RuntimeException;
 
-class ReaderAdapter extends AbstractAdapter implements AdapterInterface
+class ReaderAdapter implements AdapterInterface
 {
     private Client $client;
 
-    public function __construct(private ?string $filePath = null)
+    public function __construct(
+        private ?string $filePath = null
+    )
     {
         $this->client = new Client([
             'timeout' => 5.0,
@@ -19,6 +22,8 @@ class ReaderAdapter extends AbstractAdapter implements AdapterInterface
                 'User-Agent' => 'Mozilla/5.0 (compatible; PiperReader/1.0)',
             ],
         ]);
+
+        Cf::autoload($this);
     }
 
     public function process(mixed $input): string

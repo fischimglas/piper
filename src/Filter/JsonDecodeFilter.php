@@ -2,11 +2,11 @@
 
 namespace Piper\Filter;
 
+use Piper\Utils\CreateTrait;
+
 class JsonDecodeFilter extends AbstractFilter implements FilterInterface
 {
-    public function __construct(?bool $associative = true)
-    {
-    }
+    use CreateTrait;
 
     public static function create(?bool $associative = true): static
     {

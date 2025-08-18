@@ -5,13 +5,16 @@ namespace Piper\Adapter;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Piper\Core\Cf;
+use Piper\Utils\CreateTrait;
 
-class GoogleSearchAdapter extends AbstractAdapter implements AdapterInterface
+class GoogleSearchAdapter implements AdapterInterface
 {
+    use CreateTrait;
 
     private Client $client;
-    private string $apiKey = '';
-    private string $searchEngineId = '';
+    private string $apiKey = 'AIzaSyAjwlbRpxGx7wEtxvyoMJKvY7izbJ6xLVc';
+    private string $searchEngineId = '94cc08161df2549db';
 
     /** @var string[] */
     private array $excludedSites = [
@@ -44,6 +47,8 @@ class GoogleSearchAdapter extends AbstractAdapter implements AdapterInterface
         // $this->apiKey = $apiKey;
         // $this->searchEngineId = $searchEngineId;
         $this->client = new Client();
+
+        Cf::autoload($this);
     }
 
     public function process(mixed $input): array

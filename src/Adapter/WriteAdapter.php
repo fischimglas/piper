@@ -3,13 +3,22 @@ declare(strict_types=1);
 
 namespace Piper\Adapter;
 
-class WriteAdapter extends AbstractAdapter implements AdapterInterface
+use Piper\Core\Cf;
+
+class WriteAdapter implements AdapterInterface
 {
-    public function __construct(private string $path = '/tmp', private string $filename = 'random.txt')
+    public function __construct(
+        private string $path = '/tmp',
+        private string $filename = 'random.txt'
+    )
     {
+        Cf::autoload($this);
     }
 
-    public static function create(string $path = '/tmp', string $filename = 'random.txt'): static
+    public static function create(
+        string $path = '/tmp',
+        string $filename = 'random.txt'
+    ): static
     {
         return new static($path, $filename);
     }

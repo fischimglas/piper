@@ -4,27 +4,40 @@ declare(strict_types=1);
 namespace Piper\Adapter;
 
 use Exception;
+use Piper\Core\Cf;
 
-class GoogleAiAdapter extends AbstractAdapter implements AdapterInterface
+class GoogleAiAdapter implements AdapterInterface
 {
-    private const string API_KEY = '';
+
+    private mixed $fullResponse = null;
 
     public function __construct(
-        protected ?string $model = 'gemini-2.0-flash',
-        protected ?string $voice = 'google-voice-3'
+        private ?string $apiKey = null,
+        private ?string $model = 'gemini-2.0-flash',
+        private ?string $voice = 'google-voice-3'
     )
     {
-
+        Cf::autoload($this);
     }
 
+    public static function create(
+        ?string $apiKey = null,
+        ?string $model = 'gemini-2.0-flash',
+        ?string $voice = 'google-voice-3'
+    ): static
+    {
+        return new static(
+            apiKey: $apiKey,
+            model: $model,
+            voice: $voice
+        );
+    }
 
     /**
      * @throws \Exception
      */
     public function process(mixed $input): mixed
     {
-
-        echo '- prompt: ' . $input . PHP_EOL;
         $data = [
             "contents" => [
                 [
@@ -35,9 +48,8 @@ class GoogleAiAdapter extends AbstractAdapter implements AdapterInterface
             ],
         ];
 
-
         $options = [
-            CURLOPT_URL => $this->getApiURl() . self::API_KEY,
+            CURLOPT_URL => $this->getApiURl() . $this->apiKey,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
@@ -56,8 +68,9 @@ class GoogleAiAdapter extends AbstractAdapter implements AdapterInterface
         curl_close($curl);
 
         $response = json_decode($response, true);
+        $this->fullResponse = $response;
 
-        // $this->tokensUsed = $response['usageMetadata']['totalTokenCount'] ?? 0;
+        // $response['usageMetadata']['totalTokenCount'] ?? 0;
         // $this->logTokenUsage();
 
         return $response['candidates'][0]['content']['parts'][0]['text'] ?? null;
@@ -75,7 +88,6 @@ class GoogleAiAdapter extends AbstractAdapter implements AdapterInterface
         return $this->voice;
     }
 
-
     public function setModel(string $model): static
     {
         $this->model = $model;
@@ -89,11 +101,29 @@ class GoogleAiAdapter extends AbstractAdapter implements AdapterInterface
 
     public function getAvailableModels(): array
     {
+        // TODO
         return [];
     }
 
     private function getApiURl(): string
     {
+        // TODO: - env variable for config? / more options (generative, chat, etc.) / set url
         return sprintf("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=", $this->model);
+    }
+
+    public function getFullResponse(): mixed
+    {
+        return $this->fullResponse;
+    }
+
+    public function setApiKey(?string $apiKey): static
+    {
+        $this->apiKey = $apiKey;
+        return $this;
+    }
+
+    public function getApiKey()
+    {
+        return $this->apiKey;
     }
 }

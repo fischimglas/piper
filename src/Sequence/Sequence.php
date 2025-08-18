@@ -1,17 +1,20 @@
 <?php
+declare(strict_types=1);
 
 namespace Piper\Sequence;
 
 use Piper\Adapter\AdapterInterface;
+use Piper\Core\FilterResolver;
+use Piper\Core\Receipt;
+use Piper\Core\TemplateResolver;
+use Piper\Dependency\Dependency;
 use Piper\Filter\FilterInterface;
-use Piper\Filter\FilterResolver;
-use Piper\Model\Dependency;
 use Piper\Strategy\StrategyInterface;
-use Piper\TemplateResolver;
 
 class Sequence implements SequenceInterface
 {
     private mixed $result = null;
+    private Receipt|null $receipt = null;
 
     public function __construct(
         protected null|string|AdapterInterface  $adapter = null,
@@ -40,6 +43,10 @@ class Sequence implements SequenceInterface
         $el->setAdapter($adapter);
         $el->setStrategy($strategy);
         $el->setFilter($filter);
+
+        if (!$el->getAlias()) {
+            $el->setAlias('sequence_' . uniqid());
+        }
         return $el;
     }
 
@@ -66,6 +73,9 @@ class Sequence implements SequenceInterface
         if (!empty($this->getFilter())) {
             $result = FilterResolver::apply($result, $this->getFilter());
         }
+
+        // Log result
+        $this->getReceipt()?->log($this->getAlias(), $this->getResult());
 
         return $result;
     }
@@ -102,7 +112,6 @@ class Sequence implements SequenceInterface
     {
         return $this->filter;
     }
-
 
     private function setTemplate(null|string $template): static
     {
@@ -182,5 +191,14 @@ class Sequence implements SequenceInterface
         return $this;
     }
 
+    public function touchReceipt(Receipt $receipt): static
+    {
+        $this->receipt = $receipt;
+        return $this;
+    }
 
+    public function getReceipt(): ?Receipt
+    {
+        return $this->receipt;
+    }
 }

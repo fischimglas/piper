@@ -1,14 +1,24 @@
 <?php
+/**
+ * Experimental design for general array filtering.
+ */
 declare(strict_types=1);
 
 namespace Piper\Filter;
 
 class ArrayCustomFilter extends AbstractFilter implements FilterInterface
 {
-
-    public static function create(?bool $unique = false, ?bool $trim = false, ?bool $removeEmpty = false): static
+    public static function create(
+        ?bool $unique = false,
+        ?bool $trim = false,
+        ?bool $removeEmpty = false
+    ): static
     {
-        return new static(unique: $unique, trim: $trim, removeEmpty: $removeEmpty);
+        return new static(
+            unique: $unique,
+            trim: $trim,
+            removeEmpty: $removeEmpty
+        );
     }
 
     public function format(mixed $input): array
@@ -27,7 +37,10 @@ class ArrayCustomFilter extends AbstractFilter implements FilterInterface
     }
 
 
-    public function __construct(private ?bool $unique = false, private ?bool $trim = false, private ?bool $removeEmpty = false)
+    public function __construct(
+        private ?bool $unique = false,
+        private ?bool $trim = false,
+        private ?bool $removeEmpty = false)
     {
     }
 
