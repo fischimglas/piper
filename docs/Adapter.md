@@ -1,3 +1,4 @@
 # Adapter
 
+## Planned adapter
 - Elasticsearch 

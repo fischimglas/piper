@@ -20,6 +20,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-install pcntl
 
+## TODO: this fails sometimes. Comment out, build, run command in container, then uncomment. works for now.
 RUN apt-get update && apt-get install -y libyaml-dev \
     && pecl install yaml \
     && docker-php-ext-enable yaml
