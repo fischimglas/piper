@@ -1,0 +1,9 @@
+services:
+  php:
+    build:
+      context: ./setup
+    container_name: php-app
+    volumes:
+      - ./:/app
+    working_dir: /app
+    tty: true

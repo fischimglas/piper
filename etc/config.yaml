@@ -1,0 +1,15 @@
+GoogleAiAdapter:
+  apiKey: your-google-api-key
+
+GoogleSearchAdapter:
+  apiKey: your-google-api-key
+  searchEngineId: your-search-engine-id
+
+OpenAiAdapter:
+  apiKey: your-openai-api-key
+
+DeeplAdapter:
+  apiKey: your-deepl-api-key
+
+WriteAdapter:
+  path: /tmp
