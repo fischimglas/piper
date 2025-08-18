@@ -6,3 +6,4 @@ vendor
 Thumbs.db
 
 dev.php
+.phpunit.result.cache

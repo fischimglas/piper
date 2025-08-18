@@ -1,5 +1,7 @@
 GoogleAiAdapter:
   apiKey: your-google-api-key
+  model: gemini-2.0-flash
+  voice: google-voice-3
 
 GoogleSearchAdapter:
   apiUrl: https://www.googleapis.com/customsearch/v1
@@ -31,8 +33,7 @@ GoogleSearchAdapter:
 
 OpenAiAdapter:
   apiKey: your-openai-api-key
-  model: gemini-2.0-flash
-  voice: google-voice-3
+
 
 DeeplAdapter:
   apiKey: your-deepl-api-key
