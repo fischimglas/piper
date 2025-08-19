@@ -6,14 +6,14 @@ defaults:
   writer: WriteAdapter
 
 GoogleAiAdapter:
-  apiKey: AIzaSyBFO2-GstfLOf8fgRlGgukUpkqVEKyXmeM
+  apiKey: YOUR-API-KEY
   model: gemini-2.0-flash
   voice: google-voice-3
 
 GoogleSearchAdapter:
   apiUrl: https://www.googleapis.com/customsearch/v1
-  apiKey: AIzaSyAjwlbRpxGx7wEtxvyoMJKvY7izbJ6xLVc
-  searchEngineId: 94cc08161df2549db
+  apiKey: YOUR-API-KEY
+  searchEngineId: YOUR-SEARCH-ENGINE-ID
   excludedSites:
     - facebook.com
     - twitter.com
@@ -39,11 +39,11 @@ GoogleSearchAdapter:
     - quikr.com
 
 OpenAiAdapter:
-  apiKey: your-openai-api-key
+  apiKey: YOUR-API-KEY
 
 
 DeeplAdapter:
-  apiKey: your-deepl-api-key
+  apiKey: YOUR-API-KEY
   formality: default
   splitSentences: true
   preserveFormatting: false

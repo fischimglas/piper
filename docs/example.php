@@ -1,4 +1,11 @@
 <?php
+/**
+ * Example of a complex pipe that combines AI text generation, Google search,
+ * file reading/writing, and filtering.
+ * This example would NOT work as it is here, because the sequences / adapters are not combined
+ * in a way that would continuously pass data through the pipe or use it. it is just a demonstration
+ * of how sequences can be chained together and how adapters can be used.
+ */
 
 use Piper\Adapter\GoogleAiAdapter;
 use Piper\Adapter\GoogleSearchAdapter;
@@ -13,25 +20,28 @@ use Piper\Filter\LinksInHtmlFilter;
 use Piper\Strategy\PerItemStrategy;
 use Piper\Strategy\WholeResultStrategy;
 
-
-// Google Suche
-$result = Pipe::create()
+Pipe::create()
+    // AI Text generation
+    ->pipe(Sequence::create(
+        adapter: GoogleAiAdapter::create(),
+        template: 'Erfinde eine kurze Sci Fi Geschichte, 500 Wörter. {{storyBase}}',
+        data: ['storyBase' => 'Die Geschichte soll mit Klingon beginnen und in Zürich spielen. Keine Formatierung, nur Text. '],
+    ))
+    // Google Search
     ->pipe(Sequence::create(
         adapter: GoogleSearchAdapter::create(),
         strategy: WholeResultStrategy::create(),
         template: 'Indisches Restaurant in Zürich Oerlikon',
         alias: 'init',
-    ))->run();
-
-
-// ---------------------------------------------------------------------------
-
-// CHAIN
-$pipe1 = Pipe::create()
-    // Das ist der initiale Input, aber das ist verführerisch. ich müsste auf die URLs unten zugreifen können.
-    //->setInput(['https://secret-nature.ch', 'https://www.birosa-shop.ch'])
-
-    //File Reader
+    ))
+    // Stream Writer
+    ->pipe(Sequence::create(
+        adapter: WriteAdapter::create(
+            filename: 'test.json'
+        ),
+        strategy: WholeResultStrategy::create(),
+    ))
+    // Stream Reader
     ->pipe(Sequence::create(
         adapter: new ReaderAdapter(filePath: __DIR__ . '/var/jam.json'),
         strategy: WholeResultStrategy::create(),
@@ -43,40 +53,15 @@ $pipe1 = Pipe::create()
         adapter: new ReaderAdapter(),
         strategy: new PerItemStrategy(),
         alias: 'find',
-        // Ohne template werden die daten nicht serialisiert, sondern direkt weitergegeben
-        // momentan nicht optimal: Die URLs sind realtv udd sie können z.z. nicht zum original geführt werden.
         filter: [
             LinksInHtmlFilter::create()
         ],
     ))
-    // FLOW STREAM / ARRAY FILTER
-    // Ergebnisse zusammenführen und filter. Weitere Filter können hier hinzugefügt werden
-    // es ist in einer neuen Sequenz, weil die obere eine Liste verarbeitet und die untere diese zusammenführt.
+    // Just filter data.
     ->pipe(Sequence::create(
         strategy: WholeResultStrategy::create(),
         filter: [
             ArrayMergeFilter::create(),
             ArrayUnique::create(),
         ],
-    ))
-    // File Writer
-    ->pipe(Sequence::create(
-        adapter: WriteAdapter::create(
-            filename: 'test.json',
-            path: __DIR__,
-        ),
-        strategy: WholeResultStrategy::create(),
-    ));
-
-
-// ---------------------------------------------------------------------------
-
-// AI
-$pipe2 = Pipe::create()
-    ->setInput('Jam')
-    ->pipe(Sequence::create(
-        adapter: GoogleAiAdapter::create(),
-        strategy: WholeResultStrategy::create(),
-        template: 'Was ist {{input}}?',
-        alias: 'init',
     ));

@@ -6,14 +6,23 @@ namespace Piper\Adapter;
 use DeepL\DeepLException;
 use DeepL\Translator;
 use Piper\Contracts\AdapterInterface;
+use Piper\Core\Cf;
 
 class DeeplAdapter implements AdapterInterface
 {
-    private readonly Translator $translator;
+    private Translator $translator;
 
     private string $from = 'de';
 
     private string $to = 'en';
+
+    public static function create(string $from, string $to): static
+    {
+        $el = new static();
+        $el->setFrom($from);
+        $el->setTo($to);
+        return $el;
+    }
 
     /**
      * @throws DeepLException
@@ -25,8 +34,13 @@ class DeeplAdapter implements AdapterInterface
         private bool    $splitSentences = true,
     )
     {
-        $this->translator = new Translator($this->apiKey);
+        Cf::autoload($this);
+
+        if ($this->apiKey) {
+            $this->translator = new Translator($this->apiKey);
+        }
     }
+
 
     public function process(mixed $input): mixed
     {
@@ -35,6 +49,7 @@ class DeeplAdapter implements AdapterInterface
             $to = 'en-GB';
         }
 
+        // TODO this code is just a temporary copy.
         $filtered = $input;
         // Make sure we only translate elements with actual content
         if (is_array($input)) {
@@ -47,12 +62,16 @@ class DeeplAdapter implements AdapterInterface
             return $input;
         }
 
-        $result = $this->translator->translateText($filtered, $input, $to, [
-            'preserve_formatting' => $this->isPreserveFormatting(),
-            'split_sentences' => $this->isSplitSentences() === true ? 'on' : 'off',
-            'formality' => $this->getFormality(),
-            'tag_handling' => 'html',
-        ]);
+        $result = $this->translator->translateText(
+            texts: $filtered,
+            sourceLang: $this->from,
+            targetLang: $this->to,
+            options: [
+                'preserve_formatting' => $this->isPreserveFormatting(),
+                'split_sentences' => $this->isSplitSentences() === true ? 'on' : 'off',
+                'formality' => $this->getFormality(),
+                'tag_handling' => 'html',
+            ]);
 
         if (is_array($input)) {
             $res = $input;
@@ -103,6 +122,9 @@ class DeeplAdapter implements AdapterInterface
     public function setApiKey(?string $apiKey): static
     {
         $this->apiKey = $apiKey;
+
+        $this->translator = new Translator($this->apiKey);
+
         return $this;
     }
 

@@ -7,6 +7,7 @@ use Piper\Contracts\AdapterInterface;
 use Piper\Contracts\FilterInterface;
 use Piper\Contracts\SequenceInterface;
 use Piper\Contracts\StrategyInterface;
+use Piper\Strategy\WholeResultStrategy;
 
 class Sequence implements SequenceInterface
 {
@@ -37,7 +38,11 @@ class Sequence implements SequenceInterface
     ): static
     {
         $el = new self(adapter: $adapter, strategy: $strategy, template: $template, alias: $alias, filter: $filter, dependencies: $dependencies, data: $data);
+
         $el->setAdapter($adapter);
+        if (!$strategy) {
+            $strategy = WholeResultStrategy::create();
+        }
         $el->setStrategy($strategy);
         $el->setFilter($filter);
 
@@ -50,7 +55,7 @@ class Sequence implements SequenceInterface
 
     public function resolve(mixed $input): mixed
     {
-        $this->emit('resolve', $input);
+        // $this->emit('resolve', $input);
 //        if ($this->template === null && $this->getAdapter() === null) {
 //            return $input;
 //        }
@@ -111,7 +116,7 @@ class Sequence implements SequenceInterface
         return $this->filter;
     }
 
-    private function setTemplate(null|string $template): static
+    public function setTemplate(null|string $template): static
     {
         $this->template = $template;
         return $this;

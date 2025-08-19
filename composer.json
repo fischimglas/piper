@@ -6,6 +6,7 @@
       "Piper\\": "src/"
     }
   },
+  "license": "MIT",
   "authors": [
     {
       "name": "Jvo Maurer",

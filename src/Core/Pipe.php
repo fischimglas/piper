@@ -14,7 +14,13 @@ declare(strict_types=1);
 namespace Piper\Core;
 
 
+use Piper\Adapter\DeeplAdapter;
+use Piper\Adapter\GoogleAiAdapter;
+use Piper\Adapter\GoogleSearchAdapter;
+use Piper\Contracts\AdapterInterface;
+use Piper\Contracts\FilterInterface;
 use Piper\Contracts\SequenceInterface;
+use Piper\Strategy\WholeResultStrategy;
 use RuntimeException;
 
 class Pipe
@@ -141,5 +147,49 @@ class Pipe
     public function getReceipt(): Receipt
     {
         return $this->receipt;
+    }
+
+
+    /**
+     * Predefined sequences --------------------------------------------------------------------------------
+     */
+
+    public function aiText(string $prompt, ?array $data = [], ?AdapterInterface $aiAdapter = null): static
+    {
+        $sequence = Sequence::create()
+            ->setTemplate($prompt)
+            ->setData($data)
+            ->setAdapter($aiAdapter ?: GoogleAiAdapter::create())
+            ->setStrategy(WholeResultStrategy::class);
+
+        return $this->pipe($sequence);
+    }
+
+    public function translate(string $from, string $to, ?AdapterInterface $translateAdapter = null): static
+    {
+        $sequence = Sequence::create()
+            ->setAdapter($translateAdapter ?: DeeplAdapter::create($from, $to))
+            ->setStrategy(WholeResultStrategy::class);
+
+        return $this->pipe($sequence);
+    }
+
+    public function filter(string|array|FilterInterface $filter): static
+    {
+        $sequence = Sequence::create()
+            ->setFilter($filter)
+            ->setStrategy(WholeResultStrategy::class);
+
+        return $this->pipe($sequence);
+    }
+
+    public function search(string $searchFor = ''): static
+    {
+        $sequence = Sequence::create()
+            ->setTemplate($searchFor)
+            ->setAdapter(GoogleSearchAdapter::create())
+            ->setStrategy(WholeResultStrategy::class);
+
+        return $this->pipe($sequence);
     }
 }
