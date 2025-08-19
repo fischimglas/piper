@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Piper\Strategy;
 
 use Piper\Contracts\StrategyInterface;
