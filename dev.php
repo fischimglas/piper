@@ -23,31 +23,15 @@ require_once __DIR__ . '/vendor/autoload.php';
 $ai = GoogleAiAdapter::create();
 
 
-$story = Sequence::create(
-    adapter: $ai,
-    strategy: WholeResultStrategy::create(),
-    template: 'Erfinde eine kurze Sci Fi Geschichte, 120 Wörter. {{init}}',
-    alias: 'details',
-    data: ['init' => 'Die Geschichte soll mit Klingon beginnen und in Zürich spielen.'],
-//    dependencies: [
-//        new Dependency(
-//            sequence: Sequence::create(
-//                adapter: GoogleSearchAdapter::create(),
-//                template: 'Indisches Restaurant in Zürich Oerlikon',
-//                alias: 'init',
-//            ),
-//            strategy: WholeResultStrategy::create(),
-//            alias: 'init',
-//        ),
-//    ],
-);
-
-echo PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . 'Result:' . PHP_EOL;
 $pipe = Pipe::create()
-    ->pipe($story)
     ->pipe(Sequence::create(
         adapter: $ai,
-        strategy: WholeResultStrategy::create(),
+        template: 'Erfinde eine kurze Sci Fi Geschichte, 120 Wörter. {{storyBase}}',
+        data: ['storyBase' => 'Die Geschichte soll mit Klingon beginnen und in Zürich spielen.'],
+        onError:
+    ))
+    ->pipe(Sequence::create(
+        adapter: $ai,
         template: 'Schreibe die Geschichte um dass es im Wilden westen passiert. Geschichte: {{input}}?',
     ));
 
@@ -57,7 +41,6 @@ print_r($result);
 $log = $pipe->getReceipt()->getLogs();
 print_r($log);
 
-print_r($ai);
 
 exit;
 // ---------------------------------------------------------------------------

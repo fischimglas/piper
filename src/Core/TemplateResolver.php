@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Piper\Core;
 
+use RuntimeException;
+
 class TemplateResolver
 {
 
@@ -14,7 +16,7 @@ class TemplateResolver
 
             if ($value === null) {
                 if ($strict) {
-                    throw new \RuntimeException("Missing key: {$matches[1]}");
+                    throw new RuntimeException("Missing key: {$matches[1]}");
                 }
                 // TODO: Replace with empty string or return the original match?
                 return $matches[0];

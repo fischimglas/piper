@@ -50,6 +50,7 @@ class Sequence implements SequenceInterface
 
     public function resolve(mixed $input): mixed
     {
+        $this->emit('resolve', $input);
 //        if ($this->template === null && $this->getAdapter() === null) {
 //            return $input;
 //        }
