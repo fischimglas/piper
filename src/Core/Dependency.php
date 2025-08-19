@@ -6,6 +6,7 @@ namespace Piper\Core;
 
 use Piper\Contracts\SequenceInterface;
 use Piper\Contracts\StrategyInterface;
+use Piper\Strategy\WholeResultStrategy;
 use RuntimeException;
 
 /**
@@ -22,8 +23,8 @@ class Dependency
      */
     public function __construct(
         SequenceInterface        $sequence,
-        string|StrategyInterface $strategy,
-        string                   $alias
+        string                   $alias,
+        string|StrategyInterface $strategy = WholeResultStrategy::class,
     )
     {
         $this->setSequence($sequence)
@@ -33,11 +34,11 @@ class Dependency
 
     public static function create(
         SequenceInterface        $sequence,
-        string|StrategyInterface $strategy,
-        string                   $alias
+        string                   $alias,
+        string|StrategyInterface $strategy = WholeResultStrategy::class,
     ): self
     {
-        return new self($sequence, $strategy, $alias);
+        return new self($sequence, $alias, $strategy);
     }
 
     /**

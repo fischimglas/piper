@@ -25,7 +25,7 @@ class Receipt
         return $this->data[$key] ?? null;
     }
 
-    public function log(string $sequenceName, mixed $message): void
+    public function log(?string $sequenceName = null, mixed $message = null): void
     {
         $this->logs[] = [
             'time' => microtime(true),

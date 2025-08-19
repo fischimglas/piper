@@ -29,16 +29,18 @@ class Pipe
     private Receipt $receipt;
 
     public function __construct(
-        private ?string $alias = null,
+        private ?string           $alias = null,
         private null|array|string $input = null,
-        private array $sequences = []
-    ) {
+        private array             $sequences = []
+    )
+    {
         $this->receipt = new Receipt();
     }
 
     public static function create(
         ?string $alias = null,
-    ): static {
+    ): static
+    {
         $element = new static();
         $element->setAlias($alias);
         return $element;
@@ -85,6 +87,10 @@ class Pipe
             $this->sequences,
             function ($carry, Sequence $sequence) {
                 $strategy = $sequence->getStrategy();
+                // TODO: should be removed
+                if (!$strategy) {
+                    $strategy = WholeResultStrategy::create();
+                }
 
                 $data = self::gatherDependencyResults($sequence);
                 $sequence->setData($data);
