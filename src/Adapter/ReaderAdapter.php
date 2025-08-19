@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Piper\Adapter;
@@ -15,8 +16,7 @@ class ReaderAdapter implements AdapterInterface
 
     public function __construct(
         private ?string $filePath = null
-    )
-    {
+    ) {
         $this->client = new Client([
             'timeout' => 5.0,
             'headers' => [

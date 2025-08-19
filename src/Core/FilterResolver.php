@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Autoloads the required classes and runs the filter serialized.
  *
@@ -8,6 +9,7 @@
  * ...
  * $result = $resolver->resolve($input);
  */
+
 declare(strict_types=1);
 
 namespace Piper\Core;

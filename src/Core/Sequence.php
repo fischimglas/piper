@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Piper\Core;
@@ -15,28 +16,25 @@ class Sequence implements SequenceInterface
     private Receipt|null $receipt = null;
 
     public function __construct(
-        protected null|string|AdapterInterface  $adapter = null,
+        protected null|string|AdapterInterface $adapter = null,
         protected null|string|StrategyInterface $strategy = null,
-        protected ?string                       $template = null,
-        protected ?string                       $alias = null,
-        protected null|array|FilterInterface    $filter = [],
-        protected null|array                    $dependencies = [],
-        protected null|array                    $data = [],
-    )
-    {
+        protected ?string $template = null,
+        protected ?string $alias = null,
+        protected null|array|FilterInterface $filter = [],
+        protected null|array $dependencies = [],
+        protected null|array $data = [],
+    ) {
     }
 
     public static function create(
-        null|string|AdapterInterface  $adapter = null,
+        null|string|AdapterInterface $adapter = null,
         null|string|StrategyInterface $strategy = null,
-        null|string                   $template = null,
-        ?string                       $alias = null,
-        null|array|FilterInterface    $filter = [],
-        null|array                    $dependencies = [],
-        null|array                    $data = []
-
-    ): static
-    {
+        null|string $template = null,
+        ?string $alias = null,
+        null|array|FilterInterface $filter = [],
+        null|array $dependencies = [],
+        null|array $data = []
+    ): static {
         $el = new self(adapter: $adapter, strategy: $strategy, template: $template, alias: $alias, filter: $filter, dependencies: $dependencies, data: $data);
 
         $el->setAdapter($adapter);

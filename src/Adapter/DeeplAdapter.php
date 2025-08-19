@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Piper\Adapter;
@@ -30,10 +31,9 @@ class DeeplAdapter implements AdapterInterface
     public function __construct(
         private ?string $apiKey = null,
         private ?string $formality = 'default',
-        private bool    $preserveFormatting = true,
-        private bool    $splitSentences = true,
-    )
-    {
+        private bool $preserveFormatting = true,
+        private bool $splitSentences = true,
+    ) {
         Cf::autoload($this);
 
         if ($this->apiKey) {
@@ -71,7 +71,8 @@ class DeeplAdapter implements AdapterInterface
                 'split_sentences' => $this->isSplitSentences() === true ? 'on' : 'off',
                 'formality' => $this->getFormality(),
                 'tag_handling' => 'html',
-            ]);
+            ]
+        );
 
         if (is_array($input)) {
             $res = $input;

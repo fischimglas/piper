@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This is part of the development and should be removed later on.
  */

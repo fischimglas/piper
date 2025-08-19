@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Piper\Adapter;
@@ -10,25 +11,22 @@ use Piper\Core\DataFormat;
 class WriteAdapter implements AdapterInterface
 {
     public function __construct(
-        private string     $filename,
-        private ?string    $path = null,
+        private string $filename,
+        private ?string $path = null,
         private DataFormat $format = DataFormat::JSON,
-    )
-    {
+    ) {
         Cf::autoload($this);
     }
 
     public static function create(
-        string      $filename,
-        ?string     $path = null,
+        string $filename,
+        ?string $path = null,
         ?DataFormat $dataFormat = DataFormat::JSON,
-    ): static
-    {
+    ): static {
         return new static($path, $filename);
     }
 
-    public
-    function process(mixed $input): mixed
+    public function process(mixed $input): mixed
     {
         file_put_contents($this->path . DIRECTORY_SEPARATOR . $this->filename, json_encode($input, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
@@ -56,5 +54,4 @@ class WriteAdapter implements AdapterInterface
     {
         return $this->filename;
     }
-
 }

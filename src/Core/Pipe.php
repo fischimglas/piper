@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Run Pipes with sequences and dependencies.
  *
@@ -9,10 +10,10 @@
  *           ->pipe(new Sequence());
  * * $result = $pipe->run();
  */
+
 declare(strict_types=1);
 
 namespace Piper\Core;
-
 
 use Piper\Adapter\DeeplAdapter;
 use Piper\Adapter\GoogleAiAdapter;
@@ -25,22 +26,19 @@ use RuntimeException;
 
 class Pipe
 {
-
     private Receipt $receipt;
 
     public function __construct(
-        private ?string           $alias = null,
+        private ?string $alias = null,
         private null|array|string $input = null,
-        private array             $sequences = []
-    )
-    {
+        private array $sequences = []
+    ) {
         $this->receipt = new Receipt();
     }
 
     public static function create(
         ?string $alias = null,
-    ): static
-    {
+    ): static {
         $element = new static();
         $element->setAlias($alias);
         return $element;

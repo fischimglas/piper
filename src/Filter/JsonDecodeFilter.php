@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Piper\Filter;
@@ -13,7 +14,6 @@ class JsonDecodeFilter extends AbstractFilter implements FilterInterface
 
     public function __construct(private readonly ?bool $associative = true)
     {
-
     }
 
     public static function create(?bool $associative = true): static

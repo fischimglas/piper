@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Piper\Core;
@@ -7,7 +8,6 @@ use RuntimeException;
 
 class TemplateResolver
 {
-
     public static function resolve(string $template, null|array $data, bool $strict = false): string
     {
         return preg_replace_callback('/{{\s*([\w\.]+)\s*}}/', function ($matches) use ($data, $strict) {

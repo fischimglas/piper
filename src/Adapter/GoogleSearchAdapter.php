@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Piper\Adapter;
@@ -17,24 +18,22 @@ class GoogleSearchAdapter implements AdapterInterface
     private Client $client;
 
     public function __construct(
-        private array   $excludedSites = [],
+        private array $excludedSites = [],
         private ?string $apiKey = null,
         private ?string $searchEngineId = null,
         private ?string $apiUrl = null
-    )
-    {
+    ) {
         $this->client = new Client();
 
         Cf::autoload($this);
     }
 
     public static function create(
-        array   $excludedSites = [],
+        array $excludedSites = [],
         ?string $apiKey = null,
         ?string $searchEngineId = null,
         ?string $apiUrl = null
-    ): static
-    {
+    ): static {
         return new static(
             excludedSites: $excludedSites,
             apiKey: $apiKey,
@@ -66,7 +65,7 @@ class GoogleSearchAdapter implements AdapterInterface
             $results = json_decode($response->getBody()->getContents(), true);
 
             return $results['items'] ?? [];
-        } catch (GuzzleException|RuntimeException $e) {
+        } catch (GuzzleException | RuntimeException $e) {
             // TODO
             return [];
         }

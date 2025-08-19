@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Piper\Core;
@@ -14,22 +15,20 @@ class Dependency
     private ?string $alias;
 
     public function __construct(
-        SequenceInterface        $sequence,
+        SequenceInterface $sequence,
         string|StrategyInterface $strategy,
-        string                   $alias
-    )
-    {
+        string $alias
+    ) {
         $this->setStrategy($strategy);
         $this->setSequence($sequence);
         $this->setAlias($alias);
     }
 
     public static function create(
-        SequenceInterface        $sequence,
+        SequenceInterface $sequence,
         string|StrategyInterface $strategy,
-        string                   $alias
-    ): self
-    {
+        string $alias
+    ): self {
         return new self(
             sequence: $sequence,
             strategy: $strategy,

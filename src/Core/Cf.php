@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Config reader and provider
  *
@@ -8,12 +9,14 @@
  *   Cf::get('GoogleAiAdapter.apiKey')
  *   Cf::autoload($this)
  */
+
 declare(strict_types=1);
 
 namespace Piper\Core;
 
 use ReflectionClass;
 use RuntimeException;
+
 use function yaml_parse_file;
 
 class Cf

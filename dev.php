@@ -24,22 +24,17 @@ $ai = GoogleAiAdapter::create();
 
 
 $pipe = Pipe::create()
-    ->pipe(Sequence::create(
-        adapter: $ai,
-        template: 'Erfinde eine kurze Sci Fi Geschichte, 120 Wörter. {{storyBase}}',
-        data: ['storyBase' => 'Die Geschichte soll mit Klingon beginnen und in Zürich spielen.'],
-        onError:
-    ))
-    ->pipe(Sequence::create(
-        adapter: $ai,
-        template: 'Schreibe die Geschichte um dass es im Wilden westen passiert. Geschichte: {{input}}?',
-    ));
+    ->aiText(prompt: 'Erfinde eine kurze Sci Fi Geschichte, 500 Wörter.',)
+    ->aiText(prompt: 'Schreibe die Geschichte um dass es im Wilden westen passiert. Geschichte: {{input}}.',)
+    ->translate(from: 'de', to: 'it',);
 
-$result = $pipe->run();
+echo $pipe->run();
+
+
 print_r($result);
 
-$log = $pipe->getReceipt()->getLogs();
-print_r($log);
+// $log = $pipe->getReceipt()->getLogs();
+// print_r($log);
 
 
 exit;

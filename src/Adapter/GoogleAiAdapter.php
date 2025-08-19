@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Piper\Adapter;
@@ -9,15 +10,13 @@ use Piper\Core\Cf;
 
 class GoogleAiAdapter implements AdapterInterface
 {
-
     private mixed $fullResponse = null;
 
     public function __construct(
         private ?string $apiKey = null,
         private ?string $model = null,
         private ?string $voice = null
-    )
-    {
+    ) {
         Cf::autoload($this);
     }
 
@@ -25,8 +24,7 @@ class GoogleAiAdapter implements AdapterInterface
         ?string $apiKey = null,
         ?string $model = null,
         ?string $voice = null
-    ): static
-    {
+    ): static {
         return new static(
             apiKey: $apiKey,
             model: $model,

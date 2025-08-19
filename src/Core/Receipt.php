@@ -1,9 +1,11 @@
 <?php
+
 /**
  * TODO:
  * - The receipt should be available in the sequence. but it shhould also be filled with some (in/out?) data
  * while piping.
  */
+
 declare(strict_types=1);
 
 namespace Piper\Core;

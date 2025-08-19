@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Piper\Contracts;
@@ -21,5 +22,4 @@ interface SequenceInterface
     public function getData(): array;
 
     public function setData(array $data): static;
-
 }
