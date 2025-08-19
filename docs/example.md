@@ -1,25 +1,12 @@
-<?php
-/**
- * Example of a complex pipe that combines AI text generation, Google search,
- * file reading/writing, and filtering.
- * This example would NOT work as it is here, because the sequences / adapters are not combined
- * in a way that would continuously pass data through the pipe or use it. it is just a demonstration
- * of how sequences can be chained together and how adapters can be used.
- */
+# Example
 
-use Piper\Adapter\GoogleAiAdapter;
-use Piper\Adapter\GoogleSearchAdapter;
-use Piper\Adapter\ReaderAdapter;
-use Piper\Adapter\WriteAdapter;
-use Piper\Core\Pipe;
-use Piper\Core\Sequence;
-use Piper\Filter\ArrayMergeFilter;
-use Piper\Filter\ArrayUnique;
-use Piper\Filter\JsonDecodeFilter;
-use Piper\Filter\LinksInHtmlFilter;
-use Piper\Strategy\PerItemStrategy;
-use Piper\Strategy\WholeResultStrategy;
+Example of a complex pipe that combines AI text generation, Google search,
+file reading/writing, and filtering.
+This example would NOT work as it is here, because the sequences / adapters are not combined
+in a way that would continuously pass data through the pipe or use it. it is just a demonstration
+of how sequences can be chained together and how adapters can be used.
 
+```php
 Pipe::create()
     // AI Text generation
     ->pipe(Sequence::create(
@@ -65,3 +52,4 @@ Pipe::create()
             ArrayUnique::create(),
         ],
     ));
+```

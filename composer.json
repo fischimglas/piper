@@ -1,5 +1,7 @@
 {
   "name": "jam/piper",
+  "description": "A pipeline library for orchestrating AI adapters, APIs, and data flows with dependency resolution.",
+  "keywords": ["pipeline", "ai", "adapter", "orchestration", "dataflow"],
   "version": "0.0.1",
   "autoload": {
     "psr-4": {
@@ -13,7 +15,15 @@
       "email": "jvo.maurer@gmail.com"
     }
   ],
+  "homepage": "https://github.com/fischimglas/piper",
+  "support": {
+    "issues": "https://github.com/fischimglas/piper/issues",
+    "source": "https://github.com/fischimglas/piper"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
+    "php": ">=8.1",
     "ext-pdo": "*",
     "ext-fileinfo": "*",
     "ext-json": "*",
