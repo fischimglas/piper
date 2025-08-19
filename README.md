@@ -1,93 +1,79 @@
 # Piper
 
-Piper is a flexible PHP library for processing and transforming data using adapters, filters, and strategies. It allows
-you to easily define and extend complex processing chains (pipelines).
+**State: Development!**
+
+Piper is a lightweight PHP framework for building AI- and API-driven pipelines. It enables the orchestration of sequences of operations with **adapters**, **strategies**, and **dependencies**. This allows you to create **complicated data flows**, where the output of one sequence can be reused or transformed by another.
 
 ## Features
+- Define sequences of operations that can consume input, process data, and produce results.
+- Support for dependencies between sequences, with configurable strategies for how to pass results.
+- Template-based text resolution, with dynamic placeholders filled from upstream results.
+- Extendable with custom adapters, strategies, and filters.
 
-- Adapters for various data sources and targets (e.g., Deepl, Google AI, Google Search)
-- Filters for data transformation and validation (e.g., array operations, JSON parsing)
-- Strategies to control how processing is applied (e.g., per item, whole result)
-- Easily extendable with your own adapters, filters, and strategies
+## Available Adapters
+- **GoogleAiAdapter** – interface for Google AI models.
+- **OpenAiAdapter** – interface for OpenAI models (ChatGPT, GPT, etc.).
+- **DeeplAdapter** – translation with DeepL.
+- **GoogleSearchAdapter** – integration with Google Search API.
 
-## Installation
+## Examples
 
-Install via Composer:
-
-```bash
-composer require fischimglas/piper
-```
-
-## Core Concepts
-
-Piper works with three main components:
-
-- **Adapter**: Interfaces to external services or data sources
-- **Filter**: Transformations or checks on the data
-- **Strategy**: Controls how filters are applied to the data
-
-## Example
-
-The following example shows how to build a pipeline with multiple filters and adapters:
-
+### Simple AI Text Generation
 ```php
-<?php
-
-use Piper\Core\Pipe;
-
 $pipe = Pipe::create()
-    ->aiText(prompt: 'Create a short Sci-Fi Story, 500 Wörter.')
-    ->aiText(prompt: 'Rewrite the story, so it play in the wild west. Story: {{input}}.')
-    ->translate(from: 'en', to: 'fr');
+    ->aiText(prompt: 'Invent a short sci-fi story, about 500 words.')
+    ->run();
+
+echo $pipe;
 ```
 
-### Multiple Adapters
-
+### Chained AI Transformations
 ```php
-<?php
-
-
 $pipe = Pipe::create()
-    ->search(searchFor: 'Fondue Restaurant in Zurich')
-    ->filter('array', 'map', fn ($item)  => ['name' => $item['title'],'url' => $item['link'],]})
-    ->readUrls()
-    ->aiText(prompt: 'Find all important contact data like name of place, phone, email, etc. from the HTML: {{input}}')
-    ->translate(from: 'en', to: 'fr')
-    ->write('output.json');
+    ->aiText(prompt: 'Invent a short sci-fi story, 500 words.')
+    ->aiText(prompt: 'Rewrite the story so that it takes place in the Wild West. Story: {{input}}')
+    ->run();
+
+echo $pipe;
 ```
 
-### Dependencies
-
+### With Translation
 ```php
-<?php
+$pipe = Pipe::create()
+    ->aiText(prompt: 'Invent a short sci-fi story, 500 words.')
+    ->translate(from: 'en', to: 'it')
+    ->run();
 
-$pipe1 = Pipe::create('myAlias')
-    ->search(searchFor: 'Fondue Restaurant in Zurich')
-    ->readUrls();
- 
-$pipe2 = Pipe::create()
-    ->aiText(prompt: 'Find something in those URLS: {{myAlias}}', dependsOn: $pipe1)
-    ->write('output.txt');
+echo $pipe;
 ```
 
-## Documentation
+### Using Dependencies Between Sequences
+```php
+$from = new TextSequence(
+    adapter: new GoogleAiAdapter(),
+    template: 'Invent a place in Switzerland',
+);
 
-See the [Docs](docs/) for more details:
+$name = new TextSequence(
+    adapter: new GoogleAiAdapter(),
+    template: 'Invent a name for a person',
+);
 
-- [Adapter](docs/Adapter.md)
-- [Filter](docs/Filter.md)
-- [Strategies](docs/Piper.md)
-- [Example](docs/example.php)
-- [Templates](docs/Templates.md)
-- [Events](docs/Events.md)
-- [Receipt](docs/Receipt.md)
-- [Dependency](docs/Dependency.md)
-- [Sequence](docs/Sequence.md)
+$story = new TextSequence(
+    adapter: new GoogleAiAdapter(),
+    dependencies: [
+        new Dependency(sequence: $from, strategy: new WholeResultStrategy(), alias: 'from'),
+        new Dependency(sequence: $name, strategy: new WholeResultStrategy(), alias: 'name'),
+    ],
+    template: 'Invent a story about {{from}}, originating from {{name}}.'
+);
 
-## License
+Pipe::run([$from, $name, $story]);
 
-WTFPL
+echo $story->getResult();
+```
 
 ---
 
-Done so with ❤️ by Jam.
+## Status
+Currently in active development. APIs may change.
