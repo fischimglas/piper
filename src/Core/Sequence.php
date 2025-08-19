@@ -10,34 +10,48 @@ use Piper\Contracts\SequenceInterface;
 use Piper\Contracts\StrategyInterface;
 use Piper\Strategy\WholeResultStrategy;
 
+/**
+ * Represents a Sequence in a data flow, with optional Adapter, Strategy, Template, Filters, and Dependencies.
+ */
 class Sequence implements SequenceInterface
 {
     private mixed $result = null;
-    private Receipt|null $receipt = null;
+    private ?Receipt $receipt = null;
 
     public function __construct(
-        protected null|string|AdapterInterface $adapter = null,
-        protected null|string|StrategyInterface $strategy = null,
-        protected ?string $template = null,
-        protected ?string $alias = null,
-        protected null|array|FilterInterface $filter = [],
-        protected null|array $dependencies = [],
-        protected null|array $data = [],
-    ) {
+        protected AdapterInterface|string|null  $adapter = null,
+        protected StrategyInterface|string|null $strategy = null,
+        protected ?string                       $template = null,
+        protected ?string                       $alias = null,
+        protected array|FilterInterface|null    $filter = [],
+        protected ?array                        $dependencies = [],
+        protected ?array                        $data = [],
+    )
+    {
     }
 
     public static function create(
-        null|string|AdapterInterface $adapter = null,
-        null|string|StrategyInterface $strategy = null,
-        null|string $template = null,
-        ?string $alias = null,
-        null|array|FilterInterface $filter = [],
-        null|array $dependencies = [],
-        null|array $data = []
-    ): static {
-        $el = new self(adapter: $adapter, strategy: $strategy, template: $template, alias: $alias, filter: $filter, dependencies: $dependencies, data: $data);
+        AdapterInterface|string|null  $adapter = null,
+        StrategyInterface|string|null $strategy = null,
+        ?string                       $template = null,
+        ?string                       $alias = null,
+        array|FilterInterface|null    $filter = [],
+        array                         $dependencies = [],
+        array                         $data = []
+    ): static
+    {
+        $el = new self(
+            adapter: $adapter,
+            strategy: $strategy,
+            template: $template,
+            alias: $alias,
+            filter: $filter,
+            dependencies: $dependencies,
+            data: $data
+        );
 
         $el->setAdapter($adapter);
+
         if (!$strategy) {
             $strategy = WholeResultStrategy::create();
         }
@@ -47,19 +61,14 @@ class Sequence implements SequenceInterface
         if (!$el->getAlias()) {
             $el->setAlias('sequence_' . uniqid());
         }
+
         return $el;
     }
 
-
     public function resolve(mixed $input): mixed
     {
-        // $this->emit('resolve', $input);
-//        if ($this->template === null && $this->getAdapter() === null) {
-//            return $input;
-//        }
+        $hydratedValue = $input;
 
-        // This is the part that "hydrates" the template with the data. this can be called after the strategy
-        $result = $hydratedValue = $input;
         if ($this->getTemplate()) {
             $hydratedValue = TemplateResolver::resolve(
                 template: $this->template,
@@ -67,19 +76,21 @@ class Sequence implements SequenceInterface
             );
         }
 
+        $result = $hydratedValue;
 
         if ($this->getAdapter()) {
             $result = $this->getAdapter()->process($hydratedValue);
         }
+
         if (!empty($this->getFilter())) {
             $result = FilterResolver::apply($result, $this->getFilter());
         }
 
-        // Log result
         $this->getReceipt()?->log($this->getAlias(), $this->getResult());
 
         return $result;
     }
+
 
     public function getAlias(): ?string
     {
@@ -114,7 +125,7 @@ class Sequence implements SequenceInterface
         return $this->filter;
     }
 
-    public function setTemplate(null|string $template): static
+    public function setTemplate(?string $template): static
     {
         $this->template = $template;
         return $this;
@@ -125,9 +136,8 @@ class Sequence implements SequenceInterface
         return $this->template;
     }
 
-    public function setAdapter(null|string|AdapterInterface $adapter): static
+    public function setAdapter(AdapterInterface|string|null $adapter): static
     {
-        // TODO
         if (is_string($adapter)) {
             $adapter = new $adapter();
         }
@@ -136,12 +146,12 @@ class Sequence implements SequenceInterface
         return $this;
     }
 
-    public function getAdapter(): null|AdapterInterface
+    public function getAdapter(): ?AdapterInterface
     {
         return $this->adapter;
     }
 
-    public function setStrategy(string|StrategyInterface|null $strategy): static
+    public function setStrategy(StrategyInterface|string|null $strategy): static
     {
         if (is_string($strategy)) {
             $strategy = new $strategy();
@@ -150,7 +160,7 @@ class Sequence implements SequenceInterface
         return $this;
     }
 
-    public function getStrategy(): string|StrategyInterface|null
+    public function getStrategy(): StrategyInterface|string|null
     {
         return $this->strategy;
     }
@@ -165,11 +175,6 @@ class Sequence implements SequenceInterface
 
     public function setDependencies(array $dependencies): static
     {
-        if (empty($dependencies)) {
-            return $this;
-        }
-
-
         foreach ($dependencies as $dep) {
             $this->addDependency($dep);
         }

@@ -23,6 +23,6 @@ class JsonDecodeFilter extends AbstractFilter implements FilterInterface
 
     public function format(mixed $input): mixed
     {
-        return json_decode(trim($input));
+        return json_decode(trim($input . ''));
     }
 }

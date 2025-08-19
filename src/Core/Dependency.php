@@ -8,32 +8,36 @@ use Piper\Contracts\SequenceInterface;
 use Piper\Contracts\StrategyInterface;
 use RuntimeException;
 
+/**
+ * Represents a dependency from one Sequence to another with an associated Strategy.
+ */
 class Dependency
 {
     private SequenceInterface $sequence;
     private StrategyInterface $strategy;
     private ?string $alias;
 
+    /**
+     * @throws RuntimeException
+     */
     public function __construct(
-        SequenceInterface $sequence,
+        SequenceInterface        $sequence,
         string|StrategyInterface $strategy,
-        string $alias
-    ) {
-        $this->setStrategy($strategy);
-        $this->setSequence($sequence);
-        $this->setAlias($alias);
+        string                   $alias
+    )
+    {
+        $this->setSequence($sequence)
+            ->setStrategy($strategy)
+            ->setAlias($alias);
     }
 
     public static function create(
-        SequenceInterface $sequence,
+        SequenceInterface        $sequence,
         string|StrategyInterface $strategy,
-        string $alias
-    ): self {
-        return new self(
-            sequence: $sequence,
-            strategy: $strategy,
-            alias: $alias
-        );
+        string                   $alias
+    ): self
+    {
+        return new self($sequence, $strategy, $alias);
     }
 
     /**
@@ -43,17 +47,15 @@ class Dependency
     {
         if (is_string($strategy)) {
             $tmp = @class_implements($strategy);
-            if (!(is_subclass_of($strategy, StrategyInterface::class))) {
-                print_r($tmp);
+            if (!is_subclass_of($strategy, StrategyInterface::class)) {
                 throw new RuntimeException(
                     sprintf('Strategy "%s" must implement %s', $strategy, StrategyInterface::class)
                 );
             }
             $strategy = new $strategy();
         }
+
         $this->strategy = $strategy;
-
-
         return $this;
     }
 
@@ -63,6 +65,11 @@ class Dependency
         return $this;
     }
 
+    public function setSequence(SequenceInterface $sequence): self
+    {
+        $this->sequence = $sequence;
+        return $this;
+    }
 
     public function getSequence(): SequenceInterface
     {
@@ -74,21 +81,18 @@ class Dependency
         return $this->strategy;
     }
 
-    public function getResult(): mixed
-    {
-        // TODO
-        // return $this->strategy->process($this->sequence->getData());
-        return null;
-    }
-
     public function getAlias(): ?string
     {
         return $this->alias;
     }
 
-    public function setSequence(SequenceInterface $sequence): self
+    /**
+     * Returns the processed result of the dependency.
+     * TODO: implement actual processing logic
+     */
+    public function getResult(): mixed
     {
-        $this->sequence = $sequence;
-        return $this;
+        // Example: return $this->strategy->process($this->sequence->getData());
+        return null;
     }
 }

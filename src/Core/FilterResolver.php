@@ -28,18 +28,13 @@ class FilterResolver
                 $this->addFilter($f);
             }
             return $this;
-        }
-        if (is_callable($filter)) {
+        } else if (is_callable($filter)) {
             $this->filter[] = $filter;
             return $this;
-        }
-
-        if ($filter instanceof FilterInterface) {
+        } else if ($filter instanceof FilterInterface) {
             $this->filter[] = $filter;
             return $this;
-        }
-
-        if (is_string($filter) && class_exists($filter) && is_subclass_of($filter, FilterInterface::class)) {
+        } else if (is_string($filter) && class_exists($filter) && is_subclass_of($filter, FilterInterface::class)) {
             $this->filter[] = new $filter();
             return $this;
         }
@@ -60,7 +55,9 @@ class FilterResolver
                 return $fmt->format($carry);
             }
 
-            throw new RuntimeException(sprintf("Filter must be a callable or implement FilterInterface, got: %s", gettype($fmt)));
+            throw new RuntimeException(
+                sprintf("Filter must be a callable or implement FilterInterface, got: %s", gettype($fmt))
+            );
         }, $input);
     }
 
