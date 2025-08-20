@@ -52,19 +52,16 @@ class Sequence implements SequenceInterface
             data: $data
         );
 
-        $el->setAdapter($adapter);
-
         if (!$strategy) {
             $strategy = WholeResultStrategy::create();
         }
-        $el->setStrategy($strategy);
-        $el->setFilter($filter);
-
         if (!$el->getAlias()) {
             $el->setAlias('sequence_' . uniqid());
         }
 
-        return $el;
+        return $el->setAdapter($adapter)
+            ->setStrategy($strategy)
+            ->setFilter($filter);
     }
 
     public function resolve(mixed $input = null): mixed

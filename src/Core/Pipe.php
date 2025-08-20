@@ -2,6 +2,12 @@
 
 namespace Piper\Core;
 
+use Piper\Adapter\DeeplAdapter;
+use Piper\Adapter\GoogleAiAdapter;
+use Piper\Contracts\AdapterInterface;
+use Piper\Contracts\FilterInterface;
+use Piper\Strategy\WholeResultStrategy;
+
 class Pipe
 {
     /** @var Sequence[] */
@@ -31,12 +37,25 @@ class Pipe
 
     public function pipe(Sequence $sequence): self
     {
+        $this->addWithDependencies($sequence);
+        return $this;
+    }
+
+    private function addWithDependencies(Sequence $sequence, array &$added = []): void
+    {
+        $id = spl_object_hash($sequence);
+        if (isset($added[$id])) {
+            return;
+        }
+        foreach ($sequence->getDependencies() as $dep) {
+            $this->addWithDependencies($dep, $added);
+        }
         if ($this->last) {
             $this->last->addChild($sequence);
         }
         $this->nodes[] = $sequence;
         $this->last = $sequence;
-        return $this;
+        $added[$id] = true;
     }
 
     public function run($input = null)
@@ -88,5 +107,38 @@ class Pipe
             unset($temp[$id]);
             $result[] = $node;
         }
+    }
+
+    /**
+     * Predefined sequences --------------------------------------------------------------------------------
+     */
+
+    public function aiText(string $prompt, ?array $data = [], ?AdapterInterface $aiAdapter = null): static
+    {
+        $sequence = Sequence::create()
+            ->setTemplate($prompt)
+            ->setData($data)
+            ->setAdapter($aiAdapter ?: GoogleAiAdapter::create())
+            ->setStrategy(WholeResultStrategy::class);
+
+        return $this->pipe($sequence);
+    }
+
+    public function translate(string $from, string $to, ?AdapterInterface $translateAdapter = null): static
+    {
+        $sequence = Sequence::create()
+            ->setAdapter($translateAdapter ?: DeeplAdapter::create($from, $to))
+            ->setStrategy(WholeResultStrategy::class);
+
+        return $this->pipe($sequence);
+    }
+
+    public function filter(string|array|FilterInterface $filter): static
+    {
+        $sequence = Sequence::create()
+            ->setFilter($filter)
+            ->setStrategy(WholeResultStrategy::class);
+
+        return $this->pipe($sequence);
     }
 }
