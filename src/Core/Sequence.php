@@ -64,15 +64,24 @@ class Sequence implements SequenceInterface
             ->setFilter($filter);
     }
 
-    public function resolve(mixed $input = null): mixed
+    public function resolve(mixed $input = null, ?array $depResults = []): mixed
     {
-        echo "Resolving sequence: {$this->getAlias()}\n";
-        $hydratedValue = $input;
+        // echo "Resolving sequence: {$this->getAlias()}\n";
 
+//        // Dependency-Resultate einsammeln
+//        $depData = [];
+//        foreach ($this->getDependencies() as $dep) {
+//            $depData[$dep->getAlias()] = $dep->getResult();
+//        }
+
+        // Input und Dependency-Resultate zusammenführen
+        $templateData = array_merge(['input' => $input], $depResults);
+
+        $hydratedValue = $input;
         if ($this->getTemplate()) {
             $hydratedValue = TemplateResolver::resolve(
                 template: $this->template,
-                data: ['input' => $input],
+                data: $templateData,
             );
         }
 
@@ -86,7 +95,9 @@ class Sequence implements SequenceInterface
             $result = FilterResolver::apply($result, $this->getFilter());
         }
 
-        $this->getReceipt()?->log($this->getAlias(), $this->getResult());
+        $this->setResult($result);
+
+        $this->getReceipt()?->log($this->getAlias(), $result);
 
         return $result;
     }

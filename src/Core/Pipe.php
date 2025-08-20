@@ -6,6 +6,7 @@ use Piper\Adapter\DeeplAdapter;
 use Piper\Adapter\GoogleAiAdapter;
 use Piper\Contracts\AdapterInterface;
 use Piper\Contracts\FilterInterface;
+use Piper\Contracts\SequenceInterface;
 use Piper\Strategy\WholeResultStrategy;
 
 class Pipe
@@ -58,25 +59,30 @@ class Pipe
         $added[$id] = true;
     }
 
-    public function run($input = null)
+    public function run($input = null): SequenceInterface
     {
         $sorted = $this->topologicalSort();
         $results = [];
         $result = null;
         foreach ($sorted as $seq) {
-            $depResults = ['input' => $input, 'last' => $result];
+            $depResults = ['last' => $result];
             foreach ($seq->getDependencies() as $dep) {
-                $depResults[] = $dep->getResult();
+                $depResults[$dep->getAlias()] = $dep->getResult();
             }
             foreach ($seq->getParents() as $parent) {
-                $depResults[] = $parent->getResult();
+                $depResults['input'] = $parent->getResult();
             }
             /** @var \Piper\Core\Sequence $seq */
-            $result = $seq->resolve($depResults ?: $input);
+            $result = $seq->resolve($input, $depResults);
             $seq->setResult($result);
             $results[$seq->getAlias() ?? spl_object_hash($seq)] = $result;
         }
-        return end($results);
+
+        $last = end($results);
+
+        return Sequence::create()
+            ->setAlias($this->getAlias())
+            ->setResult($last);
     }
 
     private function topologicalSort(): array
@@ -127,6 +133,7 @@ class Pipe
     public function translate(string $from, string $to, ?AdapterInterface $translateAdapter = null): static
     {
         $sequence = Sequence::create()
+            ->setTemplate('{{input}}')
             ->setAdapter($translateAdapter ?: DeeplAdapter::create($from, $to))
             ->setStrategy(WholeResultStrategy::class);
 

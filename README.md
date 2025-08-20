@@ -47,14 +47,43 @@ $pipe = Pipe::create()
 echo $pipe;
 ```
 
-~~### Using Dependencies Between Sequences~~
+### Using Dependencies Between Sequences
 
 Dependency management is currently under development. The following example illustrates the intended usage, but the feature is not yet fully implemented.
 ```php
 
-Pipe::run([$from, $name, $story]);
+$from = Sequence::create(
+    adapter: GoogleAiAdapter::class,
+    template: 'Invent a place in Switzerland. Return only the name of the place, No other text.',
+    alias: 'from',
+    filter: TrimFilter::create(),
+);
 
-echo $story->getResult();
+$name = Sequence::create(
+    adapter: GoogleAiAdapter::class,
+    template: 'Invent a name for a person. Return only the name, no other text.',
+    alias: 'name',
+    filter: TrimFilter::create(),
+);
+
+$story = Sequence::create(
+    adapter: GoogleAiAdapter::class,
+    template: 'Invent a story about {{from}}, originating from {{name}}.',
+    alias: 'story',
+    dependencies: [$from, $name],
+);
+
+
+$res = Pipe::create('main')
+    ->pipe($story)
+    ->translate('en', 'de')
+    ->run();
+
+print_r([
+    'name' => $name->getResult(),
+    'story, german' => $res->getResult()
+]);
+
 ```
 
 ---
