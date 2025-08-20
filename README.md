@@ -20,31 +20,28 @@ Piper is a lightweight PHP framework for building AI- and API-driven pipelines. 
 
 ### Simple AI Text Generation
 ```php
-$pipe = Pipe::create()
+echo Pipe::create()
     ->aiText(prompt: 'Invent a short sci-fi story, about 500 words.')
-    ->run();
-
-echo $pipe;
+    ->run()
+    ->getResult();
 ```
 
 ### Chained AI Transformations
 ```php
-$pipe = Pipe::create()
+echo Pipe::create()
     ->aiText(prompt: 'Invent a short sci-fi story, 500 words.')
     ->aiText(prompt: 'Rewrite the story so that it takes place in the Wild West. Story: {{input}}')
-    ->run();
-
-echo $pipe;
+    ->run()
+    ->getResult();
 ```
 
 ### With Translation
 ```php
-$pipe = Pipe::create()
+echo Pipe::create()
     ->aiText(prompt: 'Invent a short sci-fi story, 500 words.')
     ->translate(from: 'en', to: 'it')
-    ->run();
-
-echo $pipe;
+    ->run()
+    ->getResult();
 ```
 
 ### Using Dependencies Between Sequences
