@@ -2,7 +2,11 @@
 
 **State: Development!**
 
-Piper is a lightweight PHP framework for building AI- and API-driven pipelines. It enables the orchestration of sequences of operations with **adapters**, **strategies**, and **dependencies**. This allows you to create **complicated data flows**, where the output of one sequence can be reused or transformed by another.
+Piper is a lightweight PHP framework for building AI- and API-driven pipelines. 
+It orchestrates sequences of operations, each optionally equipped with an adapter, a strategy, and filters. 
+Sequences are linked via dependencies, forming a Directed Acyclic Graph (DAG) that ensures outputs are computed in 
+the correct order without cycles. This allows you to build complex, multi-step workflows where the output of one 
+sequence can be reused, transformed, or passed to multiple other sequences in a controlled and predictable way.
 
 ## Features
 - Define sequences of operations that can consume input, process data, and produce results.
