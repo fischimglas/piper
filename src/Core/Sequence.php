@@ -65,7 +65,7 @@ class Sequence implements SequenceInterface
         return $el;
     }
 
-    public function resolve(mixed $input): mixed
+    public function resolve(mixed $input = null): mixed
     {
         $hydratedValue = $input;
 

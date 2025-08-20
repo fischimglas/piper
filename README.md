@@ -47,7 +47,9 @@ $pipe = Pipe::create()
 echo $pipe;
 ```
 
-### Using Dependencies Between Sequences
+~~### Using Dependencies Between Sequences~~
+
+Dependency management is currently under development. The following example illustrates the intended usage, but the feature is not yet fully implemented.
 ```php
 $from = new TextSequence(
     adapter: new GoogleAiAdapter(),
