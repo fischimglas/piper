@@ -69,6 +69,7 @@ class Sequence implements SequenceInterface
         // echo "Resolving sequence: {$this->getAlias()}\n";
 
 //        // Dependency-Resultate einsammeln
+// This is done in the pipe. problem?
 //        $depData = [];
 //        foreach ($this->getDependencies() as $dep) {
 //            $depData[$dep->getAlias()] = $dep->getResult();
@@ -87,8 +88,13 @@ class Sequence implements SequenceInterface
 
         $result = $hydratedValue;
 
+        // TODO different implementation style, with dependencies as param
         if ($this->getAdapter()) {
-            $result = $this->getAdapter()->process($hydratedValue);
+            $result = $this
+                ->getStrategy()
+                ->process($hydratedValue, fn($currentValue) => $this
+                    ->getAdapter()
+                    ->process($currentValue));
         }
 
         if (!empty($this->getFilter())) {

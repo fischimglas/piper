@@ -7,6 +7,7 @@ use Piper\Adapter\GoogleAiAdapter;
 use Piper\Contracts\AdapterInterface;
 use Piper\Contracts\FilterInterface;
 use Piper\Contracts\SequenceInterface;
+use Piper\Filter\TrimFilter;
 use Piper\Strategy\WholeResultStrategy;
 
 class Pipe
@@ -119,13 +120,18 @@ class Pipe
      * Predefined sequences --------------------------------------------------------------------------------
      */
 
-    public function aiText(string $prompt, ?array $data = [], ?AdapterInterface $aiAdapter = null): static
+    public function aiText(string $prompt, ?array $data = [], ?AdapterInterface $aiAdapter = null, ?string $alias = null): static
     {
         $sequence = Sequence::create()
             ->setTemplate($prompt)
             ->setData($data)
             ->setAdapter($aiAdapter ?: GoogleAiAdapter::create())
+            ->setFilter(TrimFilter::create())
             ->setStrategy(WholeResultStrategy::class);
+
+        if ($alias) {
+            $sequence->setAlias($alias);
+        }
 
         return $this->pipe($sequence);
     }
@@ -135,6 +141,7 @@ class Pipe
         $sequence = Sequence::create()
             ->setTemplate('{{input}}')
             ->setAdapter($translateAdapter ?: DeeplAdapter::create($from, $to))
+            ->setFilter(TrimFilter::create())
             ->setStrategy(WholeResultStrategy::class);
 
         return $this->pipe($sequence);
