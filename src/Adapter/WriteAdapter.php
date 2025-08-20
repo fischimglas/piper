@@ -10,25 +10,38 @@ use Piper\Core\DataFormat;
 
 class WriteAdapter implements AdapterInterface
 {
+    private string $filename;
+    private string $path;
+
     public function __construct(
-        private string $filename,
-        private ?string $path = null,
+        string             $filename,
+        ?string            $path = null,
         private DataFormat $format = DataFormat::JSON,
-    ) {
+    )
+    {
         Cf::autoload($this);
+        if ($filename) {
+            $this->filename = $filename;
+        }
+        if ($path) {
+            $this->path = $path;
+        }
     }
 
     public static function create(
-        string $filename,
-        ?string $path = null,
+        string      $filename,
+        ?string     $path = null,
         ?DataFormat $dataFormat = DataFormat::JSON,
-    ): static {
-        return new static($path, $filename);
+    ): static
+    {
+        return new static(filename: $filename, path: $path, format: $dataFormat);
     }
 
     public function process(mixed $input): mixed
     {
-        file_put_contents($this->path . DIRECTORY_SEPARATOR . $this->filename, json_encode($input, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $path = $this->path . DIRECTORY_SEPARATOR . $this->filename;
+        echo "Writing to file: $path\n";
+        file_put_contents($path, json_encode($input, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         return $input;
     }
