@@ -92,13 +92,16 @@ class Sequence implements SequenceInterface
         if ($this->getAdapter()) {
             $result = $this
                 ->getStrategy()
-                ->process($hydratedValue, fn($currentValue) => $this
-                    ->getAdapter()
-                    ->process($currentValue));
-        }
+                ->process($hydratedValue, function ($currentValue) {
+                    $tmp = $this
+                        ->getAdapter()
+                        ->process($currentValue);
+                    if (!empty($this->getFilter())) {
+                        $tmp = FilterResolver::apply($tmp, $this->getFilter());
+                    }
 
-        if (!empty($this->getFilter())) {
-            $result = FilterResolver::apply($result, $this->getFilter());
+                    return $tmp;
+                });
         }
 
         $this->setResult($result);
