@@ -6,6 +6,7 @@ namespace Piper\Adapter;
 
 use DeepL\DeepLException;
 use DeepL\Translator;
+use JetBrains\PhpStorm\NoReturn;
 use Piper\Contracts\AdapterInterface;
 use Piper\Core\Cf;
 
@@ -31,9 +32,10 @@ class DeeplAdapter implements AdapterInterface
     public function __construct(
         private ?string $apiKey = null,
         private ?string $formality = 'default',
-        private bool $preserveFormatting = true,
-        private bool $splitSentences = true,
-    ) {
+        private bool    $preserveFormatting = true,
+        private bool    $splitSentences = true,
+    )
+    {
         Cf::autoload($this);
 
         if ($this->apiKey) {
@@ -41,13 +43,13 @@ class DeeplAdapter implements AdapterInterface
         }
     }
 
-
     public function process(mixed $input): mixed
     {
         $to = $this->getTo();
         if ($to === 'en') {
-            $to = 'en-GB';
+            $this->setTo('en-GB');
         }
+
 
         // TODO this code is just a temporary copy.
         $filtered = $input;

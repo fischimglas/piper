@@ -71,7 +71,7 @@ final class SequenceTest extends TestCase
         $dep = $this->createMock(Dependency::class);
         $dep->method('getAlias')->willReturn('dep1');
         $seq = new Sequence();
-        $seq->addDependency($dep);
+        $seq->dependsOn($dep);
         $this->assertArrayHasKey('dep1', $seq->getDependencies());
     }
 

@@ -15,6 +15,8 @@ use Piper\Strategy\WholeResultStrategy;
  */
 class Sequence implements SequenceInterface
 {
+    private array $parents = [];
+
     private mixed $result = null;
     private ?Receipt $receipt = null;
 
@@ -50,29 +52,36 @@ class Sequence implements SequenceInterface
             data: $data
         );
 
-        $el->setAdapter($adapter);
-
         if (!$strategy) {
             $strategy = WholeResultStrategy::create();
         }
-        $el->setStrategy($strategy);
-        $el->setFilter($filter);
-
         if (!$el->getAlias()) {
             $el->setAlias('sequence_' . uniqid());
         }
 
-        return $el;
+        return $el->setAdapter($adapter)
+            ->setStrategy($strategy)
+            ->setFilter($filter);
     }
 
-    public function resolve(mixed $input = null): mixed
+    public function resolve(mixed $input = null, ?array $depResults = []): mixed
     {
-        $hydratedValue = $input;
+        // echo "Resolving sequence: {$this->getAlias()}\n";
 
+//        // Dependency-Resultate einsammeln
+//        $depData = [];
+//        foreach ($this->getDependencies() as $dep) {
+//            $depData[$dep->getAlias()] = $dep->getResult();
+//        }
+
+        // Input und Dependency-Resultate zusammenführen
+        $templateData = array_merge(['input' => $input], $depResults);
+
+        $hydratedValue = $input;
         if ($this->getTemplate()) {
             $hydratedValue = TemplateResolver::resolve(
                 template: $this->template,
-                data: ['input' => $input],
+                data: $templateData,
             );
         }
 
@@ -86,7 +95,9 @@ class Sequence implements SequenceInterface
             $result = FilterResolver::apply($result, $this->getFilter());
         }
 
-        $this->getReceipt()?->log($this->getAlias(), $this->getResult());
+        $this->setResult($result);
+
+        $this->getReceipt()?->log($this->getAlias(), $result);
 
         return $result;
     }
@@ -165,10 +176,10 @@ class Sequence implements SequenceInterface
         return $this->strategy;
     }
 
-    public function addDependency(Dependency $dependency): static
+    public function dependsOn(Sequence $sequence): static
     {
-        if (!in_array($dependency, $this->dependencies, true)) {
-            $this->dependencies[$dependency->getAlias()] = $dependency;
+        if (!in_array($sequence, $this->getDependencies(), true)) {
+            $this->dependencies[$sequence->getAlias()] = $sequence;
         }
         return $this;
     }
@@ -176,7 +187,7 @@ class Sequence implements SequenceInterface
     public function setDependencies(array $dependencies): static
     {
         foreach ($dependencies as $dep) {
-            $this->addDependency($dep);
+            $this->dependsOn($dep);
         }
         return $this;
     }
@@ -184,6 +195,16 @@ class Sequence implements SequenceInterface
     public function getDependencies(): array
     {
         return $this->dependencies ?? [];
+    }
+
+    public function addChild(Sequence $child): void
+    {
+        $child->parents[spl_object_hash($this)] = $this;
+    }
+
+    public function getParents(): array
+    {
+        return $this->parents;
     }
 
     public function getData(): array
