@@ -51,24 +51,6 @@ echo $pipe;
 
 Dependency management is currently under development. The following example illustrates the intended usage, but the feature is not yet fully implemented.
 ```php
-$from = new TextSequence(
-    adapter: new GoogleAiAdapter(),
-    template: 'Invent a place in Switzerland',
-);
-
-$name = new TextSequence(
-    adapter: new GoogleAiAdapter(),
-    template: 'Invent a name for a person',
-);
-
-$story = new TextSequence(
-    adapter: new GoogleAiAdapter(),
-    dependencies: [
-        new Dependency(sequence: $from, strategy: new WholeResultStrategy(), alias: 'from'),
-        new Dependency(sequence: $name, strategy: new WholeResultStrategy(), alias: 'name'),
-    ],
-    template: 'Invent a story about {{from}}, originating from {{name}}.'
-);
 
 Pipe::run([$from, $name, $story]);
 

@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Piper\Contracts;
 
 use Piper\Core\Dependency;
+use Piper\Core\Sequence;
 
 interface SequenceInterface
 {
-    public function addDependency(Dependency $dependency): static;
+    public function dependsOn(Sequence $sequence): static;
 
     public function getDependencies(): array;
 

@@ -15,6 +15,8 @@ use Piper\Strategy\WholeResultStrategy;
  */
 class Sequence implements SequenceInterface
 {
+    private array $parents = [];
+
     private mixed $result = null;
     private ?Receipt $receipt = null;
 
@@ -67,6 +69,7 @@ class Sequence implements SequenceInterface
 
     public function resolve(mixed $input = null): mixed
     {
+        echo "Resolving sequence: {$this->getAlias()}\n";
         $hydratedValue = $input;
 
         if ($this->getTemplate()) {
@@ -165,10 +168,10 @@ class Sequence implements SequenceInterface
         return $this->strategy;
     }
 
-    public function addDependency(Dependency $dependency): static
+    public function dependsOn(Sequence $sequence): static
     {
-        if (!in_array($dependency, $this->dependencies, true)) {
-            $this->dependencies[$dependency->getAlias()] = $dependency;
+        if (!in_array($sequence, $this->getDependencies(), true)) {
+            $this->dependencies[$sequence->getAlias()] = $sequence;
         }
         return $this;
     }
@@ -176,7 +179,7 @@ class Sequence implements SequenceInterface
     public function setDependencies(array $dependencies): static
     {
         foreach ($dependencies as $dep) {
-            $this->addDependency($dep);
+            $this->dependsOn($dep);
         }
         return $this;
     }
@@ -184,6 +187,16 @@ class Sequence implements SequenceInterface
     public function getDependencies(): array
     {
         return $this->dependencies ?? [];
+    }
+
+    public function addChild(Sequence $child): void
+    {
+        $child->parents[spl_object_hash($this)] = $this;
+    }
+
+    public function getParents(): array
+    {
+        return $this->parents;
     }
 
     public function getData(): array
