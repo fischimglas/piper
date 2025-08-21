@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Piper\Core;
 
 use Piper\Adapter\DeeplAdapter;
 use Piper\Adapter\GoogleAiAdapter;
+use Piper\Adapter\WriteAdapter;
 use Piper\Contracts\AdapterInterface;
 use Piper\Contracts\FilterInterface;
 use Piper\Contracts\SequenceInterface;
@@ -103,7 +105,8 @@ class Pipe
     {
         $id = spl_object_hash($node);
         if (isset($temp[$id])) {
-            throw new \RuntimeException('Zyklische Abhängigkeit erkannt');
+            // throw new \RuntimeException('Zyklische Abhängigkeit erkannt');
+            return;
         }
         if (!isset($visited[$id])) {
             $temp[$id] = true;
@@ -142,6 +145,16 @@ class Pipe
             ->setTemplate('{{input}}')
             ->setAdapter($translateAdapter ?: DeeplAdapter::create($from, $to))
             ->setFilter(TrimFilter::create())
+            ->setStrategy(WholeResultStrategy::class);
+
+        return $this->pipe($sequence);
+    }
+
+    public function write(string $file, ?string $path = null, ?DataFormat $dataFormat = DataFormat::STRING): static
+    {
+        $sequence = Sequence::create()
+            // ->setTemplate('{{input}}')
+            ->setAdapter(WriteAdapter::create(filename: $file, path: $path, dataFormat: $dataFormat))
             ->setStrategy(WholeResultStrategy::class);
 
         return $this->pipe($sequence);

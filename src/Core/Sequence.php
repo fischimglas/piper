@@ -92,18 +92,24 @@ class Sequence implements SequenceInterface
         if ($this->getAdapter()) {
             $result = $this
                 ->getStrategy()
-                ->process($hydratedValue, fn($currentValue) => $this
-                    ->getAdapter()
-                    ->process($currentValue));
+                // Apply strategy
+                ->process($hydratedValue, function ($currentValue) use ($input) {
+
+                    // Process sequence
+                    $tmp = $this
+                        ->getAdapter()
+                        ->process($currentValue ?? $input);
+
+                    // Filter result
+                    return $this->getFilter() ? FilterResolver::apply($tmp, $this->getFilter()) : $tmp;
+                });
+        } else {
+            $result = $this->getStrategy()->process($hydratedValue ?? $input, fn($v) => $v);
         }
 
-        if (!empty($this->getFilter())) {
-            $result = FilterResolver::apply($result, $this->getFilter());
-        }
-
-        $this->setResult($result);
-
-        $this->getReceipt()?->log($this->getAlias(), $result);
+        $this->setResult($result)
+            ->getReceipt()
+            ?->log($this->getAlias(), $result);
 
         return $result;
     }
@@ -137,7 +143,7 @@ class Sequence implements SequenceInterface
         return $this;
     }
 
-    public function getFilter(): mixed
+    public function getFilter(): array|FilterInterface|null
     {
         return $this->filter;
     }
