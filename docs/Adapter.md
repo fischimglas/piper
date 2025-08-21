@@ -4,11 +4,12 @@
 - ElevenLabs ✅ → ElevenLabs API (sehr beliebt für Voice Cloning & TTS)
 - Anthropic Claude ✅ → Claude API
 - Google Gemini (früher PaLM/Bard) ✅ → AI Studio / Vertex AI
+- Mistral / Mixtral ✅ → API & Open Source
+- Ollama
 
 ## Planned adapter
 
 - Elasticsearch
-- Ollama
 - Wikipedia Adapter
 - Anthropic Claude
 - Mistral / Mixtral
@@ -18,7 +19,6 @@
 ### 🔤 LLMs / Textgenerierung
 
 - OpenAI (GPT-4/5, ChatGPT API) ✅ → API
-- Mistral / Mixtral ✅ → API & Open Source
 
 ### ✍️ Textverbesserung / Grammatik
 

@@ -7,21 +7,15 @@ services:
       - ./:/app
     working_dir: /app
     tty: true
+    networks:
+      - ollama-net
   ollama:
-    image: ollama/ollama:latest
-    container_name: ollama
-    # Uncomment the next line if you have Nvidia GPU support
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - capabilities: [gpu]
-    volumes:
-      - ollama:/root/.ollama
+    image: ollama/ollama
     ports:
       - "11434:11434"
-    command: ["ollama", "api", "--host", "0.0.0.0", "--port", "11434"]
-    restart: unless-stopped
-
+    networks:
+      - ollama-net
 volumes:
   ollama:
+networks:
+  ollama-net:
