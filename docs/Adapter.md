@@ -1,5 +1,10 @@
 # Adapter
 
+## DONE
+- ElevenLabs ✅ → ElevenLabs API (sehr beliebt für Voice Cloning & TTS)
+- Anthropic Claude ✅ → Claude API
+- Google Gemini (früher PaLM/Bard) ✅ → AI Studio / Vertex AI
+
 ## Planned adapter
 
 - Elasticsearch
@@ -13,8 +18,6 @@
 ### 🔤 LLMs / Textgenerierung
 
 - OpenAI (GPT-4/5, ChatGPT API) ✅ → API
-- Anthropic Claude ✅ → Claude API
-- Google Gemini (früher PaLM/Bard) ✅ → AI Studio / Vertex AI
 - Mistral / Mixtral ✅ → API & Open Source
 
 ### ✍️ Textverbesserung / Grammatik
@@ -29,12 +32,12 @@
 
 ### 📑 Zusammenfassung & Struktur
 
-- OpenAI, Claude, Gemini ✅ (sehr stark für Summarization per Prompt)
+
 - Scholarcy ✅ → Scholarcy API (wissenschaftliche Zusammenfassungen)
 
 ### 🎨 Creative Writing
 
-- NovelAI ✅ (hat ein API, eher für Story-gen / Anime-Text)
+- NovelAI ✅ (hat ein API, eher für Story-gen / Anime-Text) - Nice but not free
 - AI Dungeon ✅ (API für Premium-User)
 
 ### 📰 Marketing & SEO Texte
@@ -70,7 +73,6 @@
 ### 🗣 Text-to-Speech (TTS) & Voice Cloning
 
 - OpenAI TTS ✅ → OpenAI Audio API
-- ElevenLabs ✅ → ElevenLabs API (sehr beliebt für Voice Cloning & TTS)
 - Google Cloud Text-to-Speech ✅ → Google Cloud TTS API
 - Amazon Polly (AWS) ✅ → Amazon Polly API
 - Microsoft Azure Speech ✅ → Azure Cognitive Speech API
