@@ -66,14 +66,14 @@ class Cf
         return $value;
     }
 
-    public static function autoload(object $instance): void
+    public static function autoload(object $instance): mixed
     {
         $ref = new ReflectionClass($instance);
         $configKey = $ref->getShortName();
         $config = self::get($configKey);
 
         if (!is_array($config)) {
-            return;
+            return null;
         }
 
         foreach ($config as $prop => $value) {
@@ -82,5 +82,7 @@ class Cf
                 $instance->$setter($value);
             }
         }
+
+        return $config;
     }
 }
