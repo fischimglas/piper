@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 namespace Piper\Adapter;
 
-use Exception;
+use GeminiAPI\Client;
+use GeminiAPI\Resources\ModelName;
+use GeminiAPI\Resources\Parts\TextPart;
 use Piper\Contracts\AdapterInterface;
 use Piper\Core\Cf;
 
 class GoogleAiAdapter implements AdapterInterface
 {
     private mixed $fullResponse = null;
+    private ?Client $client = null;
+    private ?string $systemInstruction = null;
 
     public function __construct(
         private ?string $apiKey = null,
-        private ?string $model = null,
+        private ?string $model = ModelName::GEMINI_1_5_FLASH,
         private ?string $voice = null
     )
     {
@@ -23,7 +27,7 @@ class GoogleAiAdapter implements AdapterInterface
 
     public static function create(
         ?string $apiKey = null,
-        ?string $model = null,
+        ?string $model = ModelName::GEMINI_1_5_FLASH,
         ?string $voice = null
     ): static
     {
@@ -34,48 +38,28 @@ class GoogleAiAdapter implements AdapterInterface
         );
     }
 
+    public function client()
+    {
+        if (!$this->client) {
+            $this->client = new Client($this->apiKey);
+        }
+        return $this->client;
+    }
+
     /**
-     * @throws \Exception
+     * @throws \Psr\Http\Client\ClientExceptionInterface
      */
     public function process(mixed $input): mixed
     {
-        $data = [
-            "contents" => [
-                [
-                    "parts" => [
-                        ["text" => $input],
-                    ],
-                ],
-            ],
-        ];
+        $client = $this->client();
+        $response = $client->withV1BetaVersion()
+            ->generativeModel($this->model)
+            // ->withSystemInstruction('You are a cat. Your name is Neko.')
+            ->generateContent(
+                new TextPart($input),
+            );
 
-        $options = [
-            CURLOPT_URL => $this->getApiURl() . $this->apiKey,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                "Content-Type: application/json",
-            ],
-            CURLOPT_POSTFIELDS => json_encode($data),
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $options);
-        $response = curl_exec($curl);
-        if (curl_errno($curl)) {
-            throw new Exception('Curl error: ' . curl_error($curl));
-        }
-
-        curl_close($curl);
-
-        $response = json_decode($response, true);
-        $this->fullResponse = $response;
-
-        // TODO
-        // $response['usageMetadata']['totalTokenCount'] ?? 0;
-        // $this->logTokenUsage();
-
-        return $response['candidates'][0]['content']['parts'][0]['text'] ?? null;
+        return $response->text();
     }
 
 
@@ -103,14 +87,7 @@ class GoogleAiAdapter implements AdapterInterface
 
     public function getAvailableModels(): array
     {
-        // TODO
-        return [];
-    }
-
-    private function getApiURl(): string
-    {
-        // TODO: - env variable for config? / more options (generative, chat, etc.) / set url
-        return sprintf("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=", $this->model);
+        return (array)$this->client()->listModels();
     }
 
     // TODO
@@ -128,5 +105,16 @@ class GoogleAiAdapter implements AdapterInterface
     public function getApiKey()
     {
         return $this->apiKey;
+    }
+
+    public function setSystemInstruction(?string $systemInstruction): GoogleAiAdapter
+    {
+        $this->systemInstruction = $systemInstruction;
+        return $this;
+    }
+
+    public function getSystemInstruction(): ?string
+    {
+        return $this->systemInstruction;
     }
 }
