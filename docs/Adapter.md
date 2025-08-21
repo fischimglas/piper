@@ -19,13 +19,13 @@
 
 ### ✍️ Textverbesserung / Grammatik
 
-- Grammarly ✅ → Grammarly Text API
+~~- Grammarly ✅ → Grammarly Text API (Paid only?)~~
 - LanguageTool ✅ → LT API (gratis & Self-host)
 
 ### 🪄 Paraphrasieren & Umformulieren
 
-- Copy.ai ✅ → API (Business Accounts)
-- Jasper AI ✅ → API (Beta/Business)
+~~- Copy.ai ✅ → API (Business Accounts)~~
+~~- Jasper AI ✅ → API (Beta/Business)~~
 
 ### 📑 Zusammenfassung & Struktur
 
@@ -42,7 +42,7 @@
 - Jasper AI ✅
 - Copy.ai ✅
 - Writesonic ✅ → Writesonic API
-- Anyword ✅ → Anyword API
+- Anyword ✅ 🤑→ Anyword API 
 
 ### 🛠 Developer / Open Source
 
@@ -74,7 +74,7 @@
 - Google Cloud Text-to-Speech ✅ → Google Cloud TTS API
 - Amazon Polly (AWS) ✅ → Amazon Polly API
 - Microsoft Azure Speech ✅ → Azure Cognitive Speech API
-- Play.ht ✅ → Play.ht API
+- Play.ht ✅ → Play.ht API ok - login nicht möglich
 - Coqui TTS ✅ (Open Source, self-host, REST-API möglich)
 - Resemble AI ✅ → Resemble API
 
