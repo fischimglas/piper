@@ -6,7 +6,6 @@ namespace Piper\Adapter;
 
 use DeepL\DeepLException;
 use DeepL\Translator;
-use JetBrains\PhpStorm\NoReturn;
 use Piper\Contracts\AdapterInterface;
 use Piper\Core\Cf;
 
@@ -43,6 +42,9 @@ class DeeplAdapter implements AdapterInterface
         }
     }
 
+    /**
+     * @throws \DeepL\DeepLException
+     */
     public function process(mixed $input): mixed
     {
         $to = $this->getTo();
@@ -122,6 +124,9 @@ class DeeplAdapter implements AdapterInterface
         return $this;
     }
 
+    /**
+     * @throws \DeepL\DeepLException
+     */
     public function setApiKey(?string $apiKey): static
     {
         $this->apiKey = $apiKey;
