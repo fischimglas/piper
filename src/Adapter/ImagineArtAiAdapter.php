@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Piper\Adapter;
 
+use CURLFile;
 use Piper\Contracts\AdapterInterface;
 use Piper\Core\Cf;
 use RuntimeException;
@@ -13,7 +14,17 @@ class ImagineArtAiAdapter implements AdapterInterface
     public function __construct(
         private ?string $apiKey = null,
         private ?string $endpoint = 'https://api.vyro.ai/v2/image/generations',
-        private ?string $style = 'realistic',
+        /**
+         * | Id             | Name            | Cost      |
+         * |----------------|-----------------|-----------|
+         * | anime          | Anime           | 5 tokens  |
+         * | realistic      | Realistic       | 5 tokens  |
+         * | flux-schnell   | Flux Schnell    | 5 tokens  |
+         * | flux-dev-fast  | Flux Dev Fast   | 5 tokens  |
+         * | flux-dev       | Flux Dev        | 15 tokens |
+         * | imagine-turbo  | Imagine Turbo   | 1 token   |
+         */
+        private ?string $style = 'imagine-turbo',
         private ?string $aspect_ratio = '1:1',
         private ?int    $seed = 5
 
@@ -27,7 +38,7 @@ class ImagineArtAiAdapter implements AdapterInterface
         return $this->style;
     }
 
-    public function setStyle(?string $style): ImagineArtAiAdapter
+    public function setStyle(?string $style): static
     {
         $this->style = $style;
         return $this;
@@ -38,7 +49,7 @@ class ImagineArtAiAdapter implements AdapterInterface
         return $this->aspect_ratio;
     }
 
-    public function setAspectRatio(?string $aspect_ratio): ImagineArtAiAdapter
+    public function setAspectRatio(?string $aspect_ratio): static
     {
         $this->aspect_ratio = $aspect_ratio;
         return $this;
@@ -49,7 +60,7 @@ class ImagineArtAiAdapter implements AdapterInterface
         return $this->seed;
     }
 
-    public function setSeed(?int $seed): ImagineArtAiAdapter
+    public function setSeed(?int $seed): static
     {
         $this->seed = $seed;
         return $this;
@@ -60,7 +71,7 @@ class ImagineArtAiAdapter implements AdapterInterface
         return $this->apiKey;
     }
 
-    public function setApiKey(?string $apiKey): ImagineArtAiAdapter
+    public function setApiKey(?string $apiKey): static
     {
         $this->apiKey = $apiKey;
         return $this;
@@ -71,7 +82,7 @@ class ImagineArtAiAdapter implements AdapterInterface
         return $this->endpoint;
     }
 
-    public function setEndpoint(?string $endpoint): ImagineArtAiAdapter
+    public function setEndpoint(?string $endpoint): static
     {
         $this->endpoint = $endpoint;
         return $this;
@@ -85,6 +96,7 @@ class ImagineArtAiAdapter implements AdapterInterface
         $postFields['style'] = $this->style;
         $postFields['aspect_ratio'] = $this->aspect_ratio;
         $postFields['seed'] = (string)$this->seed; // API expects seed as string
+        $postFields['image'] = new CURLFile(__DIR__ . '/source.jpg');
         $ch = curl_init();
 
         curl_setopt_array($ch, [
