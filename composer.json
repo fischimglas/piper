@@ -36,7 +36,11 @@
     "symfony/http-client": "^7.3",
     "nyholm/psr7": "^1.8",
     "guzzlehttp/guzzle": "^7.9",
-    "gemini-api-php/client": "^1.7"
+    "gemini-api-php/client": "^1.7",
+    "google/cloud-text-to-speech": "^2.2",
+    "claude-php/claude-3-api": "^0.1.23",
+    "ardagnsrn/elevenlabs-laravel": "^1.0",
+    "ardagnsrn/ollama-php": "^1.0"
   },
   "config": {
     "allow-plugins": {

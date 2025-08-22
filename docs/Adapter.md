@@ -1,9 +1,15 @@
 # Adapter
 
+## DONE
+- ElevenLabs ✅ → ElevenLabs API (sehr beliebt für Voice Cloning & TTS)
+- Anthropic Claude ✅ → Claude API
+- Google Gemini (früher PaLM/Bard) ✅ → AI Studio / Vertex AI
+- Mistral / Mixtral ✅ → API & Open Source
+- Ollama
+
 ## Planned adapter
 
 - Elasticsearch
-- Ollama
 - Wikipedia Adapter
 - Anthropic Claude
 - Mistral / Mixtral
@@ -13,28 +19,25 @@
 ### 🔤 LLMs / Textgenerierung
 
 - OpenAI (GPT-4/5, ChatGPT API) ✅ → API
-- Anthropic Claude ✅ → Claude API
-- Google Gemini (früher PaLM/Bard) ✅ → AI Studio / Vertex AI
-- Mistral / Mixtral ✅ → API & Open Source
 
 ### ✍️ Textverbesserung / Grammatik
 
-- Grammarly ✅ → Grammarly Text API
+~~- Grammarly ✅ → Grammarly Text API (Paid only?)~~
 - LanguageTool ✅ → LT API (gratis & Self-host)
 
 ### 🪄 Paraphrasieren & Umformulieren
 
-- Copy.ai ✅ → API (Business Accounts)
-- Jasper AI ✅ → API (Beta/Business)
+~~- Copy.ai ✅ → API (Business Accounts)~~
+~~- Jasper AI ✅ → API (Beta/Business)~~
 
 ### 📑 Zusammenfassung & Struktur
 
-- OpenAI, Claude, Gemini ✅ (sehr stark für Summarization per Prompt)
+
 - Scholarcy ✅ → Scholarcy API (wissenschaftliche Zusammenfassungen)
 
 ### 🎨 Creative Writing
 
-- NovelAI ✅ (hat ein API, eher für Story-gen / Anime-Text)
+- NovelAI ✅ (hat ein API, eher für Story-gen / Anime-Text) - Nice but not free
 - AI Dungeon ✅ (API für Premium-User)
 
 ### 📰 Marketing & SEO Texte
@@ -42,7 +45,7 @@
 - Jasper AI ✅
 - Copy.ai ✅
 - Writesonic ✅ → Writesonic API
-- Anyword ✅ → Anyword API
+- Anyword ✅ 🤑→ Anyword API 
 
 ### 🛠 Developer / Open Source
 
@@ -70,11 +73,10 @@
 ### 🗣 Text-to-Speech (TTS) & Voice Cloning
 
 - OpenAI TTS ✅ → OpenAI Audio API
-- ElevenLabs ✅ → ElevenLabs API (sehr beliebt für Voice Cloning & TTS)
 - Google Cloud Text-to-Speech ✅ → Google Cloud TTS API
 - Amazon Polly (AWS) ✅ → Amazon Polly API
 - Microsoft Azure Speech ✅ → Azure Cognitive Speech API
-- Play.ht ✅ → Play.ht API
+- Play.ht ✅ → Play.ht API ok - login nicht möglich
 - Coqui TTS ✅ (Open Source, self-host, REST-API möglich)
 - Resemble AI ✅ → Resemble API
 

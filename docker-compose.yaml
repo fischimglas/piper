@@ -1,9 +1,21 @@
 services:
   php:
     build:
-      context: ./setup
+      context: ./setup/php
     container_name: php-app
     volumes:
       - ./:/app
     working_dir: /app
     tty: true
+    networks:
+      - ollama-net
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - ollama-net
+volumes:
+  ollama:
+networks:
+  ollama-net:
