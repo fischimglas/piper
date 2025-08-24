@@ -89,6 +89,11 @@ final class Node extends AbstractExecutable implements NodeInterface
         }
     }
 
+    public function getDependencies(): array
+    {
+        return array_map(fn($entry) => $entry['dep'], $this->deps);
+    }
+
     private function emit(Event $event, array $args): void
     {
         foreach ($this->handlers[$event->name] as $listener) {

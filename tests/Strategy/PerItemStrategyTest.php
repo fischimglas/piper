@@ -3,7 +3,7 @@
 namespace Strategy;
 
 use PHPUnit\Framework\TestCase;
-use Piper\Strategy\PerItemStrategy;
+use Piper\Core\Strategy\PerItemStrategy;
 
 
 class PerItemStrategyTest extends TestCase

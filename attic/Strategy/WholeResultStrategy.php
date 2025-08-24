@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Piper\Strategy;
 
 use Piper\Contracts\StrategyInterface;
-use Piper\Utils\CreateTrait;
 
 class WholeResultStrategy implements StrategyInterface
 {
-    use CreateTrait;
 
-    public function process(mixed $value, callable $processor): mixed
+    public function apply(mixed $input, callable $fn): mixed
     {
-        return $processor($value);
+        // Wendet die Funktion auf das gesamte Input an (WHOLE)
+        return $fn($input);
     }
 }

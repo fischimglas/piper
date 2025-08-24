@@ -3,7 +3,7 @@
 namespace Strategy;
 
 use PHPUnit\Framework\TestCase;
-use Piper\Strategy\ReduceStrategy;
+use Piper\Core\Strategy\ReduceStrategy;
 
 class ReduceStrategyTest extends TestCase
 {
