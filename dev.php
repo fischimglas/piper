@@ -2,7 +2,7 @@
 
 use Piper\Contracts\Cardinality;
 use Piper\Contracts\ContentType;
-use Piper\Core\Foundry;
+use Piper\Factory\Foundry;
 
 require_once __DIR__ . '/vendor/autoload.php';
 

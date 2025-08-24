@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Core;
 
 use PHPUnit\Framework\TestCase;
-use Piper\Core\Cf;
+use Piper\Factory\Cf;
 
 final class CfTest extends TestCase
 {

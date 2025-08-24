@@ -416,7 +416,7 @@ $searchNode = Foundry::webSearch('searchResults')
     ->dependsOn($nodeB, Strategy::WHOLE)
     ->yields(Cardinality::LIST, ContentType::TEXT);
 
-// 6. Reader-Node zum Lesen von Inhalten
+// 6. Io-Node zum Lesen von Inhalten
 $readNode = Foundry::read('fileContent')
     ->dependsOn($nodeB)
     ->yields(Cardinality::UNIT, ContentType::TEXT);

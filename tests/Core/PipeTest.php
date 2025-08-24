@@ -6,9 +6,9 @@ namespace Core;
 
 use PHPUnit\Framework\TestCase;
 use Piper\Contracts\StrategyInterface;
-use Piper\Core\Pipe;
 use Piper\Core\Receipt;
 use Piper\Core\Sequence;
+use Piper\Workflow\Pipe;
 
 final class PipeTest extends TestCase
 {
