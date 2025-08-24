@@ -1,52 +1,36 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Piper\Node;
 
-use InvalidArgumentException;
-use Piper\Contracts\Adapter\AdapterInterface;
-use Piper\Contracts\Adapter\AiAdapterInterface;
-use Piper\Contracts\Node\AiNodeInterface;
+use Piper\Adapter\Ai\GoogleAiAdapter;
 use Piper\Template\TemplateEngine;
 
-class AiNode extends AbstractNode implements AiNodeInterface
+class AiNode extends Node
 {
-    protected const ID_PREFIX = 'ai_';
+    private ?string $template;
 
-    // protected ?string $template = null;
-    private ?string $template = null;
+    public function __construct(string $id)
+    {
+        parent::__construct($id);
+        $this->withAdapter(new GoogleAiAdapter());
+    }
 
     public function run(mixed $input = null): mixed
     {
-        $templateData = [];
-        $prompt = TemplateEngine::render(
-            template: $this->template,
-            vars: $templateData,
-        );
-        $result = $this->getAdapter()->process($prompt);
+        $data = parent::run($input);
 
-        $this->setResult($result);
+        $prompt = $input;
+        if ($this->template !== null) {
+            $vars = array_merge(['input' => $input, 'self' => $this->id], $this->dataBag->all(), ['data' => $data]);
 
-        return $result;
-    }
-
-    public function getAdapter(): ?AiAdapterInterface
-    {
-        /** @var AiAdapterInterface $this ->adapter */
-        return $this->adapter;
-    }
-
-    public function withAdapter(AdapterInterface $adapter): static
-    {
-        if (!$adapter instanceof AiAdapterInterface) {
-            throw new InvalidArgumentException('Der Adapter muss eine Instanz von AiAdapterInterface sein.');
+            $prompt = TemplateEngine::render($this->template, $vars);
         }
-        $this->adapter = $adapter;
-        return $this;
+
+        return $this->getAdapter()->process($prompt);
     }
 
-    public function setTemplate(?string $template): static
+
+    public function withTemplate(?string $template): static
     {
         $this->template = $template;
         return $this;
