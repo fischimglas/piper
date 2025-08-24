@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Piper\Node;
 
+use Piper\Contracts\Adapter\AdapterInterface;
 use Piper\Contracts\Event;
 use Piper\Contracts\Node\NodeInterface;
 use Piper\Contracts\Workflow\ExecutableInterface;
@@ -12,7 +13,7 @@ use Piper\Runtime\AbstractExecutable;
 use Piper\Support\RunContext;
 use Piper\Template\TemplateEngine;
 
-final class Node extends AbstractExecutable implements NodeInterface
+class Node extends AbstractExecutable implements NodeInterface
 {
     /** @var array<int, array{dep:ExecutableInterface,strategy:StrategyInterface}> */
     private array $deps = [];
@@ -20,6 +21,7 @@ final class Node extends AbstractExecutable implements NodeInterface
 
     /** @var array<string, list<callable>> */
     private array $handlers = [];
+    private ?AdapterInterface $adapter = null;
 
     public function __construct(string $id)
     {
@@ -67,12 +69,6 @@ final class Node extends AbstractExecutable implements NodeInterface
                 $resolved[$dep->getId()] = $out;
             }
 
-            if ($this->template !== null) {
-                $vars = array_merge(['input' => $in, 'self' => $this->id], $resolved);
-                return TemplateEngine::render($this->template, $vars);
-            }
-
-            // Default: gebe Input oder zusammengesetzte Abhängigkeiten zurück
             return empty($resolved) ? $in : $resolved;
         };
 
@@ -104,5 +100,16 @@ final class Node extends AbstractExecutable implements NodeInterface
         foreach ($this->handlers[$event->name] as $listener) {
             $listener(...$args);
         }
+    }
+
+    public function withAdapter(?AdapterInterface $adapter): Node
+    {
+        $this->adapter = $adapter;
+        return $this;
+    }
+
+    public function getAdapter(): ?AdapterInterface
+    {
+        return $this->adapter;
     }
 }

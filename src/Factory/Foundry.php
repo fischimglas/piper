@@ -5,7 +5,6 @@ namespace Piper\Factory;
 
 use Piper\Contracts\CombineInterface;
 use Piper\Contracts\ContentType;
-use Piper\Contracts\Node\AiNodeInterface;
 use Piper\Contracts\Node\NodeInterface;
 use Piper\Contracts\Workflow\Cardinality;
 use Piper\Contracts\Workflow\DeciderInterface;
@@ -13,10 +12,7 @@ use Piper\Contracts\Workflow\GraphInterface;
 use Piper\Contracts\Workflow\PipeInterface;
 use Piper\Contracts\Workflow\TransformInterface;
 use Piper\Node\AiNode;
-use Piper\Node\ImageNode;
 use Piper\Node\Node;
-use Piper\Node\TextToVoiceNode;
-use Piper\Node\WebSearchNode;
 use Piper\Workflow\Combine;
 use Piper\Workflow\Decider;
 use Piper\Workflow\Graph;
@@ -25,19 +21,19 @@ use Piper\Workflow\Transform;
 
 final class Foundry
 {
-    public static function text(string $id): AiNodeInterface
+    public static function text(string $id): NodeInterface
     {
         return (new AiNode($id))->yields(Cardinality::UNIT, ContentType::TEXT);
     }
 
     public static function image(string $id): NodeInterface
     {
-        return (new ImageNode($id))->yields(Cardinality::UNIT, ContentType::IMAGE);
+        return (new Node($id))->yields(Cardinality::UNIT, ContentType::IMAGE);
     }
 
     public static function webSearch(string $id): NodeInterface
     {
-        return (new WebSearchNode($id))->yields(Cardinality::LIST, ContentType::TEXT);
+        return (new Node($id))->yields(Cardinality::LIST, ContentType::TEXT);
     }
 
     public static function read(string $id): NodeInterface
@@ -47,7 +43,7 @@ final class Foundry
 
     public static function textToVoice(string $id): NodeInterface
     {
-        return (new TextToVoiceNode($id))->yields(Cardinality::UNIT, ContentType::AUDIO);
+        return (new Node($id))->yields(Cardinality::UNIT, ContentType::AUDIO);
     }
 
     public static function transform(string $id): TransformInterface

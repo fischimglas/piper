@@ -10,6 +10,12 @@ final class Transform extends AbstractExecutable implements TransformInterface
     /** @var list<callable> */
     private array $ops = [];
 
+    public function __construct(string $id)
+    {
+        echo 'Constructing Transform with id: ' . $id . PHP_EOL;
+        parent::__construct($id);
+    }
+
     public function map(callable $fn): static
     {
         $this->ops[] = function ($x) use ($fn) {

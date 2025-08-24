@@ -46,4 +46,5 @@ final class Pipe extends AbstractExecutable implements PipeInterface
         $start = $input ?? $this->inputData;
         return $this->computeWithCache($start, $compute);
     }
+
 }
