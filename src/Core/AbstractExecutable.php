@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Piper\Core;
 
 use Piper\Contracts\CacheInterface;
@@ -8,9 +10,9 @@ use Piper\Contracts\Cardinality;
 use Piper\Contracts\ContentType;
 use Piper\Contracts\DataBagInterface;
 use Piper\Contracts\ExecutableInterface;
-use Psr\Log\LoggerInterface;
 use Piper\Core\Cache\InMemoryCache;
 use Piper\Core\Support\RunContext;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractExecutable implements ExecutableInterface
 {

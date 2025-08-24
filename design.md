@@ -318,6 +318,9 @@ Eine Node ist eine einzelne Verarbeitungseinheit, die einen klar definierten Out
 | `withLogger(Logger)`               | Fügt dem Graphen oder Pipe einen Logger hinzu.            |
 | `dependsOn(Pipe\|Node, Strategy)`  | Definiert Abhängigkeiten mit Strategie.                   |
 | `yields(Cardinality, ContentType)` | Definiert den Output-Contract (Cardinality, ContentType). |
+| `withAdapter(AdapterInterface)`    | Setzt einen spezifischen Adapter für die Node.            |
+| `getAdapter(): ?AdapterInterface`  | Gibt den aktuell konfigurierten Adapter zurück.           |
+
 
 ---
 
@@ -506,6 +509,16 @@ interface DataBagInterface
     public function remove(string $key): static;
     public function clear(): static;
     public function copy(): static; // vormals clone()
+}
+
+// --- Adapter Interface ---
+interface AdapterInterface
+{
+    /**
+     * Verarbeitet Input-Daten und gibt das Ergebnis zurück.
+     * Wird von Node-Implementierungen verwendet, um externe APIs anzusprechen.
+     */
+    public function process(mixed $input): mixed;
 }
 
 // --- Cache Interface ---

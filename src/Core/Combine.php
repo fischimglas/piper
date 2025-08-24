@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Piper\Core;
 
+use Closure;
 use Piper\Contracts\CombineInterface;
 use Piper\Contracts\ExecutableInterface;
 
@@ -10,7 +12,8 @@ final class Combine extends AbstractExecutable implements CombineInterface
     /** @var list<ExecutableInterface> */
     private array $execs = [];
 
-    private ?callable $combineFn = null;
+    private ?Closure $combineFn = null;
+
     private string $mode = 'collect'; // collect|merge|zip|custom
 
     public function add(ExecutableInterface $executable): static
@@ -21,7 +24,10 @@ final class Combine extends AbstractExecutable implements CombineInterface
 
     public function combineWith(callable $combineFn): static
     {
-        $this->combineFn = $combineFn;
+        $this->combineFn = $combineFn instanceof Closure
+            ? $combineFn
+            : $combineFn(...);
+
         $this->mode = 'custom';
         return $this;
     }
@@ -52,7 +58,11 @@ final class Combine extends AbstractExecutable implements CombineInterface
         }
 
         return match ($this->mode) {
-            'merge' => array_reduce($results, fn($c, $v) => array_merge($c ?? [], is_array($v) ? $v : [$v]), []),
+            'merge' => array_reduce(
+                $results,
+                fn($c, $v) => array_merge($c ?? [], is_array($v) ? $v : [$v]),
+                []
+            ),
             'zip' => $this->zipArrays(array_values($results)),
             'custom' => ($this->combineFn)($results),
             default => $results,
