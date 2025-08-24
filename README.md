@@ -1,93 +1,229 @@
-# Piper
+# Piper – PHP DAG Framework für KI- und API-Workflows
 
-**State: Development!**
+**Status: PROTOTYP / In Entwicklung – API und Design können sich ändern.**
 
-Piper is a lightweight PHP framework for building AI- and API-driven pipelines. 
-It orchestrates sequences of operations, each optionally equipped with an adapter, a strategy, and filters. 
-Sequences are linked via dependencies, forming a Directed Acyclic Graph (DAG) that ensures outputs are computed in 
-the correct order without cycles. This allows you to build complex, multi-step workflows where the output of one 
-sequence can be reused, transformed, or passed to multiple other sequences in a controlled and predictable way.
+Piper ist ein modernes, leichtgewichtiges PHP-Framework zur Orchestrierung von **KI- und API-Workflows** auf Basis eines **gerichteten azyklischen Graphen (DAG)**. Es bietet explizite, typisierte Bausteine für Nodes, Pipes, Graphen und Kombinatoren, unterstützt deklarative Workflows und ermöglicht komplexe, modulare Datenverarbeitung – von einfachen KI-Textoperationen bis zu verzweigten, parallelen Pipelines.
 
-## Features
-- Define sequences of operations that can consume input, process data, and produce results.
-- Support for dependencies between sequences, with configurable strategies for how to pass results.
-- Template-based text resolution, with dynamic placeholders filled from upstream results.
-- Extendable with custom adapters, strategies, and filters.
+---
 
-## Available Adapters
-- **GoogleAiAdapter** – interface for Google AI models.
-- **OpenAiAdapter** – interface for OpenAI models (ChatGPT, GPT, etc.).
-- **DeeplAdapter** – translation with DeepL.
-- **GoogleSearchAdapter** – integration with Google Search API.
+## Inhaltsverzeichnis
 
-## Examples
+- [Kernkonzepte](#kernkonzepte)
+  - [Node](#node)
+  - [Pipe](#pipe)
+  - [Graph](#graph)
+  - [Combine (Kombinator)](#combine-kombinator)
+  - [Transform](#transform)
+  - [Decide (Bedingte Ausführung)](#decide-bedingte-ausführung)
+  - [DataBag (Kontextdaten)](#databag-kontextdaten)
+  - [Caching](#caching)
+- [API-Überblick](#api-überblick)
+- [Beispiele](#beispiele)
+- [Designprinzipien](#designprinzipien)
+- [Interfaces](#interfaces)
+- [Status](#status)
 
-### Simple AI Text Generation
+---
+
+## Kernkonzepte
+
+### Node
+
+Eine **Node** ist die kleinste Verarbeitungseinheit (z.B. KI-Text, Bildgenerierung, Websuche, Datenbankabfrage). Sie erhält Input, verarbeitet ihn (ggf. mit Adapter/Filter), und gibt einen klar typisierten Output zurück. Nodes können explizite Abhängigkeiten zu anderen Nodes, Pipes oder Graphen besitzen.
+
+### Pipe
+
+Eine **Pipe** ist eine lineare Sequenz von Nodes. Sie transformiert Input Schritt für Schritt und gibt das Ergebnis des letzten Nodes als Output zurück. Pipes können als eigenständige Workflows oder als Teil von Graphen verwendet werden.
+
+### Graph
+
+Ein **Graph** orchestriert Nodes, Pipes und Kombinatoren zu komplexen Workflows. Er bildet die oberste Ebene, erkennt und verhindert Zyklen, und steuert die Ausführung.
+
+### Combine (Kombinator)
+
+Mit **Combine** können mehrere Nodes, Pipes oder Graphen parallel ausgeführt und deren Ergebnisse kombiniert, gemerged oder gezippt werden.
+
+### Transform
+
+**Transform**-Nodes dienen der Datenumformung (z.B. Mapping, Filtering, Reduktion) und können beliebige Prozessfunktionen enthalten.
+
+### Decide (Bedingte Ausführung)
+
+Mit **Decide**-Nodes lassen sich Workflows verzweigen: Bedingungen bestimmen, welcher Node/Pipe als nächstes ausgeführt wird (`if`, `elseif`, `otherwise`).
+
+### DataBag (Kontextdaten)
+
+Der **DataBag** ist eine typisierte, strukturierte Datenablage für Kontextdaten, die während der Ausführung zwischen Nodes, Pipes und Graphen transportiert werden.
+
+### Caching
+
+Nodes, Pipes, Graphen und Kombinatoren unterstützen konfigurierbare Caching-Strategien (`CacheStrategy`), um teure Berechnungen oder API-Aufrufe zu vermeiden.
+
+---
+
+## API-Überblick
+
+### Fluent API
+
+- **Graphen:**  
+  `Foundry::graph('name', [...inputs])`
+- **Pipes:**  
+  `Foundry::pipe('name')->pipe($node)->pipe($otherNode)`
+- **Nodes:**  
+  `Foundry::text('nodeName')->template('...')->yields(Cardinality::UNIT, ContentType::TEXT)`
+- **Transform:**  
+  `Foundry::transform('name')->process(fn($input) => ...)`
+- **Decide:**  
+  `Foundry::decide('name')->if(fn($input) => ..., $node)->otherwise($otherNode)`
+- **Combine:**  
+  `Foundry::combine('name')->add($pipe)->add($node)->merge()`
+- **DataBag:**  
+  `->withDataBag($dataBag)`
+- **Caching:**  
+  `->cache(CacheStrategy::PER_INPUT, 3600)`, `->fresh()`
+- **Logger:**  
+  `->withLogger($logger)`
+
+### Output-Contract
+
+Jede Node/Pipe/Graph deklariert ihren Output explizit mit  
+`->yields(Cardinality::UNIT|LIST, ContentType::TEXT|IMAGE|AUDIO|OBJECT|FILE|VECTOR)`
+
+### Abhängigkeiten
+
+Abhängigkeiten werden **immer** über Objekt-Referenzen gesetzt:  
+`->dependsOn($nodeOrPipe, Strategy::WHOLE|PER_ITEM)`
+
+---
+
+## Beispiele
+
+### 1. Einfache Text-Node
+
 ```php
-echo Pipe::create()
-    ->aiText(prompt: 'Invent a short sci-fi story, about 500 words.')
-    ->run()
-    ->getResult();
+$nodeA = Foundry::text('nodeA')
+    ->template('Summarize this: {{input}}')
+    ->yields(Cardinality::UNIT, ContentType::TEXT);
+
+$result = $nodeA->run(['input' => 'Bern, Switzerland']);
 ```
 
-### Chained AI Transformations
+### 2. Pipe mit mehreren Verarbeitungsschritten
+
 ```php
-echo Pipe::create()
-    ->aiText(prompt: 'Invent a short sci-fi story, 500 words.')
-    ->aiText(prompt: 'Rewrite the story so that it takes place in the Wild West. Story: {{input}}')
-    ->run()
-    ->getResult();
+$pipe = Foundry::pipe('myPipe')
+    ->input(['input' => 'Bern, Switzerland'])
+    ->pipe(
+        Foundry::text('nodeA')
+            ->template('Summarize this: {{input}}')
+            ->yields(Cardinality::UNIT, ContentType::TEXT)
+    )
+    ->pipe(
+        Foundry::transform('splitWords')
+            ->process(fn(string $input) => explode(' ', $input))
+            ->yields(Cardinality::LIST, ContentType::TEXT)
+    )
+    ->yields(Cardinality::LIST, ContentType::TEXT);
+
+$result = $pipe->run();
 ```
 
-### With Translation
+### 3. Bedingte Ausführung (Decide)
+
 ```php
-echo Pipe::create()
-    ->aiText(prompt: 'Invent a short sci-fi story, 500 words.')
-    ->translate(from: 'en', to: 'it')
-    ->run()
-    ->getResult();
+$summaryDecision = Foundry::decide('summaryDecision')
+    ->if(fn($input) => count($input) > 5, $nodeA)
+    ->elseif(fn($input) => count($input) > 2, $splitWords)
+    ->otherwise($nodeA);
+
+$result = $summaryDecision->run(['input' => [...]]); 
 ```
 
-### Using Dependencies Between Sequences
+### 4. Parallele Ausführung mit Combine
 
-Dependency management is currently under development. The following example illustrates the intended usage, but the feature is not yet fully implemented.
 ```php
+$combined = Foundry::combine('combinedResults')
+    ->add($pipe)
+    ->add($nodeB)
+    ->merge();
 
-$from = Sequence::create(
-    adapter: GoogleAiAdapter::class,
-    template: 'Invent a place in Switzerland. Return only the name of the place, No other text.',
-    alias: 'from',
-    filter: TrimFilter::create(),
-);
+$result = $combined->run();
+```
 
-$name = Sequence::create(
-    adapter: GoogleAiAdapter::class,
-    template: 'Invent a name for a person. Return only the name, no other text.',
-    alias: 'name',
-    filter: TrimFilter::create(),
-);
+### 5. Komplexer Graph
 
-$story = Sequence::create(
-    adapter: GoogleAiAdapter::class,
-    template: 'Invent a story about {{from}}, originating from {{name}}.',
-    alias: 'story',
-    dependencies: [$from, $name],
-);
+```php
+$graph = Foundry::graph('myGraph', ['input' => 'Some input'])
+    ->withLogger($logger)
+    ->node($pipe)
+    ->node($nodeB)
+    ->node($searchNode)
+    ->node($ttsNode);
 
+$results = $graph->run();
+```
 
-$res = Pipe::create('main')
-    ->pipe($story)
-    ->translate('en', 'de')
-    ->run();
+### 6. DataBag-Nutzung
 
-print_r([
-    'name' => $name->getResult(),
-    'story, german' => $res->getResult()
-]);
+```php
+$dataBag = new DataBag();
+$dataBag->set('userId', 123);
 
+$result = $nodeA->withDataBag($dataBag)->run();
+```
+
+### 7. Caching
+
+```php
+$nodeB = Foundry::text('nodeB')
+    ->template('Expensive operation')
+    ->yields(Cardinality::UNIT, ContentType::TEXT)
+    ->cache(CacheStrategy::PER_INPUT, 3600);
+
+$result = $nodeB->run(['input' => 'Some input']);
+$freshResult = $nodeB->fresh()->run(['input' => 'Some input']);
+```
+
+---
+
+## Designprinzipien
+
+- **Explizite Typisierung:** Nodes, Pipes, Graphen und Kombinatoren sind eigene, explizite Objekte mit klaren Interfaces.
+- **Objekt-Referenzen:** Abhängigkeiten werden ausschließlich über Objekt-Referenzen definiert, nie über String-IDs.
+- **Zyklenerkennung:** Das Framework erkennt und verhindert Zyklen im DAG.
+- **Deklarative, fluente API:** Workflows werden deklarativ und lesbar definiert.
+- **Output-Contract:** Jeder Verarbeitungsschritt deklariert explizit Output-Kardinalität und -Typ.
+- **Flexible Komposition:** Kombinieren, verzweigen, transformieren und parallelisieren von Workflows ist einfach möglich.
+- **Kontextdaten:** DataBag transportiert Kontextdaten workflow-weit.
+- **Caching:** Konfigurierbare Caching-Strategien für Nodes, Pipes, Graphen und Kombinatoren.
+- **Logger:** PSR-3 Logger können für Monitoring und Fehlerbehandlung angebunden werden.
+- **Events:** Nodes unterstützen Event-Handler für `BEFORE_RUN`, `AFTER_RUN`, `ON_ERROR`.
+
+---
+
+## Interfaces
+
+```php
+// ...siehe design.md für vollständige Interface-Definitionen...
+interface DataBagInterface { /* ... */ }
+interface CacheInterface { /* ... */ }
+enum CacheStrategy { DISABLED, PER_RUN, PER_INPUT, GLOBAL }
+interface ExecutableInterface { /* ... */ }
+interface NodeInterface extends ExecutableInterface { /* ... */ }
+interface PipeInterface extends ExecutableInterface { /* ... */ }
+interface GraphInterface extends ExecutableInterface { /* ... */ }
+interface CombineInterface extends ExecutableInterface { /* ... */ }
+interface TransformInterface extends ExecutableInterface { /* ... */ }
+interface DeciderInterface extends NodeInterface { /* ... */ }
+interface StrategyInterface { /* ... */ }
+interface FilterInterface { /* ... */ }
+enum Cardinality { UNIT, LIST }
+enum ContentType { TEXT, IMAGE, AUDIO, OBJECT, FILE, VECTOR }
+// Logger: PSR-3 LoggerInterface
 ```
 
 ---
 
 ## Status
-Currently in active development. APIs may change.
+
+Piper befindet sich in aktiver Entwicklung. Das Design und die API können sich ändern. Feedback und Beiträge sind willkommen!
