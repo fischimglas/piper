@@ -26,6 +26,7 @@ abstract class AbstractNode implements NodeInterface
     protected bool $forceFresh = false;
     protected ?array $outputContract = null;
     protected ?AdapterInterface $adapter = null;
+    protected mixed $result = null;
 
     /**
      * Kindklassen müssen diese Konstante setzen, z.B. 'text_', 'image_', etc.
@@ -98,4 +99,25 @@ abstract class AbstractNode implements NodeInterface
     }
 
     abstract public function run(mixed $input = null): mixed;
+
+    public function setResult(mixed $result): AbstractNode
+    {
+        $this->result = $result;
+        return $this;
+    }
+
+    public function getResult(): mixed
+    {
+        return $this->result;
+    }
+
+    /**
+     * @param \Piper\Contracts\Adapter\AdapterInterface|null $adapter
+     * @return AbstractNode
+     */
+    public function setAdapter(?AdapterInterface $adapter): AbstractNode
+    {
+        $this->adapter = $adapter;
+        return $this;
+    }
 }

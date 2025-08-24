@@ -10,6 +10,7 @@ use GeminiAPI\Resources\Parts\TextPart;
 use Piper\Adapter\AbstractAdapter;
 use Piper\Contracts\Adapter\AdapterType;
 use Piper\Contracts\Adapter\AiAdapterInterface;
+use RuntimeException;
 
 class GoogleAiAdapter extends AbstractAdapter implements AiAdapterInterface
 {
@@ -25,7 +26,7 @@ class GoogleAiAdapter extends AbstractAdapter implements AiAdapterInterface
     public function process(mixed $input): mixed
     {
         if (!$this->apiKey) {
-            throw new \RuntimeException('Google AI API key is required');
+            throw new RuntimeException('Google AI API key is required');
         }
 
         $client = $this->getClient();

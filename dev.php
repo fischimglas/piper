@@ -7,8 +7,11 @@ use Piper\Factory\Foundry;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+$aiAdapter = new \Piper\Adapter\Ai\GoogleAiAdapter();
+
 $nodeA = Foundry::text('nodeA')
-    ->template('Summarize: {{input}}')
+    ->setAdapter($aiAdapter)
+    ->setTemplate('Summarize: {{input}}')
     ->yields(Cardinality::UNIT, ContentType::TEXT);
 
 $split = Foundry::transform('split')
@@ -31,7 +34,4 @@ $graph = Foundry::graph('g')
 
 $out = $graph->run('Bern Switzerland is a beautiful city with rivers and bridges');
 
-// print_r($out);
-
-$mistral = new MistralAiAdapter();
-print_r($mistral);
+print_r($out);
