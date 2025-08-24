@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Piper\Workflow;
 
-use Piper\Contracts\DeciderInterface;
-use Piper\Contracts\ExecutableInterface;
-use Piper\Contracts\StrategyInterface;
+use Piper\Contracts\Workflow\DeciderInterface;
+use Piper\Contracts\Workflow\ExecutableInterface;
+use Piper\Contracts\Workflow\StrategyInterface;
 use Piper\Runtime\AbstractExecutable;
 
 final class Decider extends AbstractExecutable implements DeciderInterface

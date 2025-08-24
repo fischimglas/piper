@@ -1,6 +1,6 @@
 <?php
 
-namespace Piper\Contracts;
+namespace Piper\Contracts\Workflow;
 
 interface GraphInterface extends ExecutableInterface
 {

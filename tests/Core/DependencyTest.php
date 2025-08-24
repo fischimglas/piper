@@ -6,7 +6,7 @@ namespace Core;
 
 use PHPUnit\Framework\TestCase;
 use Piper\Contracts\SequenceInterface;
-use Piper\Contracts\StrategyInterface;
+use Piper\Contracts\Workflow\StrategyInterface;
 use Piper\Core\Dependency;
 use RuntimeException;
 

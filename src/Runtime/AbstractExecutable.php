@@ -7,10 +7,10 @@ namespace Piper\Runtime;
 use Piper\Cache\InMemoryCache;
 use Piper\Contracts\CacheInterface;
 use Piper\Contracts\CacheStrategy;
-use Piper\Contracts\Cardinality;
 use Piper\Contracts\ContentType;
 use Piper\Contracts\DataBagInterface;
-use Piper\Contracts\ExecutableInterface;
+use Piper\Contracts\Workflow\Cardinality;
+use Piper\Contracts\Workflow\ExecutableInterface;
 use Piper\Support\RunContext;
 use Psr\Log\LoggerInterface;
 

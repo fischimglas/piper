@@ -2,6 +2,8 @@
 
 namespace Piper\Contracts;
 
+use Piper\Contracts\Workflow\ExecutableInterface;
+
 interface CombineInterface extends ExecutableInterface
 {
     public function add(ExecutableInterface $executable): static;

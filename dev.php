@@ -1,7 +1,8 @@
 <?php
 
-use Piper\Contracts\Cardinality;
+use Piper\Adapter\Ai\MistralAiAdapter;
 use Piper\Contracts\ContentType;
+use Piper\Contracts\Workflow\Cardinality;
 use Piper\Factory\Foundry;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -30,4 +31,7 @@ $graph = Foundry::graph('g')
 
 $out = $graph->run('Bern Switzerland is a beautiful city with rivers and bridges');
 
-print_r($out);
+// print_r($out);
+
+$mistral = new MistralAiAdapter();
+print_r($mistral);

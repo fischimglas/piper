@@ -7,6 +7,7 @@ namespace Piper\Adapter\Search;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Piper\Adapter\AbstractAdapter;
+use Piper\Contracts\Adapter\AdapterType;
 
 class GoogleSearchAdapter extends AbstractAdapter
 {
@@ -16,6 +17,8 @@ class GoogleSearchAdapter extends AbstractAdapter
     private string $apiUrl = 'https://www.googleapis.com/customsearch/v1';
     private array $excludedSites = [];
     private int $maxResults = 10;
+
+    protected const ADAPTER_TYPE = AdapterType::SEARCH;
 
     public function process(mixed $input): mixed
     {

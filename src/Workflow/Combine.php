@@ -5,7 +5,7 @@ namespace Piper\Workflow;
 
 use Closure;
 use Piper\Contracts\CombineInterface;
-use Piper\Contracts\ExecutableInterface;
+use Piper\Contracts\Workflow\ExecutableInterface;
 use Piper\Runtime\AbstractExecutable;
 
 final class Combine extends AbstractExecutable implements CombineInterface

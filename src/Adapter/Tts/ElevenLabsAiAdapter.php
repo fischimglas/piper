@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Piper\Adapter\Tts;
 
 use Piper\Adapter\AbstractAdapter;
+use Piper\Contracts\Adapter\AdapterType;
 
 class ElevenLabsAiAdapter extends AbstractAdapter
 {
@@ -14,6 +15,8 @@ class ElevenLabsAiAdapter extends AbstractAdapter
     private float $stability = 0.75;
     private float $similarityBoost = 0.75;
     private ?string $outputPath = null;
+
+    protected const ADAPTER_TYPE = AdapterType::TTS;
 
     public function process(mixed $input): mixed
     {
@@ -33,7 +36,7 @@ class ElevenLabsAiAdapter extends AbstractAdapter
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => json_encode([
                 "model_id" => $this->model,
-                "text" => (string) $input,
+                "text" => (string)$input,
                 "voice_settings" => [
                     "stability" => $this->stability,
                     "similarity_boost" => $this->similarityBoost

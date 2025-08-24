@@ -1,6 +1,8 @@
 <?php
 
-namespace Piper\Contracts;
+namespace Piper\Contracts\Workflow;
+
+use Piper\Contracts\Node\NodeInterface;
 
 interface DeciderInterface extends NodeInterface
 {

@@ -6,18 +6,23 @@ namespace Piper\Adapter\Ai;
 
 use ArdaGnsrn\Ollama\Ollama;
 use Piper\Adapter\AbstractAdapter;
+use Piper\Contracts\Adapter\AdapterType;
+use Piper\Contracts\Adapter\AiAdapterInterface;
 
-class OllamaAiAdapter extends AbstractAdapter
+class OllamaAiAdapter extends AbstractAdapter implements AiAdapterInterface
 {
     private ?Ollama $client = null;
     private string $model = 'smollm:latest';
     private string $hostUrl = 'http://localhost:11434';
+    private ?string $apiKey = null;
+
+    protected const ADAPTER_TYPE = AdapterType::AI;
 
     public function process(mixed $input): mixed
     {
         $completions = $this->getClient()->completions()->create([
             'model' => $this->model,
-            'prompt' => (string) $input,
+            'prompt' => (string)$input,
         ]);
 
         return $completions->response;
@@ -43,16 +48,23 @@ class OllamaAiAdapter extends AbstractAdapter
         return $this->model;
     }
 
-    public function getHostUrl(): string
-    {
-        return $this->hostUrl;
-    }
-
     private function getClient(): Ollama
     {
         if (!$this->client) {
             $this->client = Ollama::client($this->hostUrl);
         }
         return $this->client;
+    }
+
+    public function setApiKey(string $apiKey): static
+    {
+        $this->apiKey = $apiKey;
+
+        return $this;
+    }
+
+    public function getHostUrl(): ?string
+    {
+        return $this->hostUrl;
     }
 }

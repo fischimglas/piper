@@ -1,7 +1,10 @@
 <?php
 
-namespace Piper\Contracts;
+namespace Piper\Contracts\Workflow;
 
+use Piper\Contracts\CacheStrategy;
+use Piper\Contracts\ContentType;
+use Piper\Contracts\DataBagInterface;
 use Psr\Log\LoggerInterface;
 
 interface ExecutableInterface

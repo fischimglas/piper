@@ -7,12 +7,14 @@ namespace Piper\Adapter\Io;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Piper\Adapter\AbstractAdapter;
+use Piper\Contracts\Adapter\AdapterType;
 
 class ReaderAdapter extends AbstractAdapter
 {
     private ?Client $client = null;
     private ?string $defaultPath = null;
     private int $timeout = 10;
+    protected const ADAPTER_TYPE = AdapterType::READER;
 
     public function process(mixed $input): mixed
     {
@@ -64,7 +66,7 @@ class ReaderAdapter extends AbstractAdapter
     {
         try {
             $response = $this->getClient()->get($url);
-            return (string) $response->getBody();
+            return (string)$response->getBody();
         } catch (GuzzleException $e) {
             throw new \RuntimeException("Failed to fetch URL: $url. " . $e->getMessage(), 0, $e);
         }

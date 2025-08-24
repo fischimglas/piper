@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Piper\Workflow;
 
-use Piper\Contracts\ExecutableInterface;
-use Piper\Contracts\GraphInterface;
+use Piper\Contracts\Workflow\ExecutableInterface;
+use Piper\Contracts\Workflow\GraphInterface;
 use Piper\Runtime\AbstractExecutable;
 use Piper\Support\RunContext;
 

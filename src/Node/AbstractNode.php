@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Piper\Node;
 
-use Piper\Contracts\AdapterInterface;
+use Piper\Contracts\Adapter\AdapterInterface;
 use Piper\Contracts\CacheStrategy;
-use Piper\Contracts\Cardinality;
 use Piper\Contracts\ContentType;
 use Piper\Contracts\DataBagInterface;
-use Piper\Contracts\ExecutableInterface;
-use Piper\Contracts\NodeInterface;
-use Piper\Contracts\StrategyInterface;
+use Piper\Contracts\Node\NodeInterface;
+use Piper\Contracts\Workflow\Cardinality;
+use Piper\Contracts\Workflow\ExecutableInterface;
+use Piper\Contracts\Workflow\StrategyInterface;
 use Psr\Log\LoggerInterface;
 
 abstract class AbstractNode implements NodeInterface

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Piper\Runtime;
 
-use Piper\Contracts\StrategyInterface;
+use Piper\Contracts\Workflow\StrategyInterface;
 
 enum Strategy implements StrategyInterface
 {

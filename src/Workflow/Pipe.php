@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Piper\Workflow;
 
-use Piper\Contracts\ExecutableInterface;
-use Piper\Contracts\PipeInterface;
+use Piper\Contracts\Workflow\ExecutableInterface;
+use Piper\Contracts\Workflow\PipeInterface;
 use Piper\Runtime\AbstractExecutable;
 use Piper\Support\RunContext;
 

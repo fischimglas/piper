@@ -2,7 +2,7 @@
 
 namespace Piper\Workflow;
 
-use Piper\Contracts\TransformInterface;
+use Piper\Contracts\Workflow\TransformInterface;
 use Piper\Runtime\AbstractExecutable;
 
 final class Transform extends AbstractExecutable implements TransformInterface

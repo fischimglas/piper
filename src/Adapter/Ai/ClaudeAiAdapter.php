@@ -7,14 +7,20 @@ namespace Piper\Adapter\Ai;
 use Claude\Claude3Api\Client;
 use Claude\Claude3Api\Config;
 use Piper\Adapter\AbstractAdapter;
+use Piper\Contracts\Adapter\AdapterType;
+use Piper\Contracts\Adapter\AiAdapterInterface;
 
-class ClaudeAiAdapter extends AbstractAdapter
+class ClaudeAiAdapter extends AbstractAdapter implements AiAdapterInterface
 {
     private ?Client $client = null;
     private ?string $apiKey = null;
     private int $maxTokens = 1000;
     private string $model = 'claude-3-sonnet-20240229';
     private float $temperature = 0.7;
+    private ?string $hostUrl = null;
+
+    protected const ADAPTER_TYPE = AdapterType::AI;
+
 
     public function process(mixed $input): mixed
     {
@@ -22,7 +28,7 @@ class ClaudeAiAdapter extends AbstractAdapter
             throw new \RuntimeException('Claude API key is required');
         }
 
-        $response = $this->getClient()->chat((string) $input);
+        $response = $this->getClient()->chat((string)$input);
         $content = $response->getContent();
 
         return $content[0]['text'] ?? null;
@@ -81,10 +87,22 @@ class ClaudeAiAdapter extends AbstractAdapter
         if (!$this->client) {
             $config = new Config(
                 apiKey: $this->apiKey,
-                maxTokens: (string) $this->maxTokens
+                maxTokens: (string)$this->maxTokens
             );
             $this->client = new Client($config);
         }
         return $this->client;
+    }
+
+    public function setHostUrl(string $hostUrl): static
+    {
+        $this->hostUrl = $hostUrl;
+
+        return $this;
+    }
+
+    public function getHostUrl(): ?string
+    {
+        return $this->hostUrl;
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Piper\Contracts;
+namespace Piper\Contracts\Workflow;
 
 enum Cardinality
 {

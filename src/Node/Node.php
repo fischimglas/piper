@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Piper\Node;
 
 use Piper\Contracts\Event;
-use Piper\Contracts\ExecutableInterface;
-use Piper\Contracts\NodeInterface;
-use Piper\Contracts\StrategyInterface;
+use Piper\Contracts\Node\NodeInterface;
+use Piper\Contracts\Workflow\ExecutableInterface;
+use Piper\Contracts\Workflow\StrategyInterface;
 use Piper\Runtime\AbstractExecutable;
 use Piper\Support\RunContext;
 use Piper\Template\TemplateEngine;

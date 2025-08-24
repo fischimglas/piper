@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace Piper\Adapter\Ai;
 
 use Piper\Adapter\AbstractAdapter;
+use Piper\Contracts\Adapter\AdapterType;
+use Piper\Contracts\Adapter\AiAdapterInterface;
 
-class MistralAiAdapter extends AbstractAdapter
+class MistralAiAdapter extends AbstractAdapter implements AiAdapterInterface
 {
     private ?string $apiKey = null;
     private string $model = 'mistral-large-latest';
     private float $temperature = 0.7;
     private int $maxTokens = 1000;
+    private string $hostUrl = 'https://api.mistral.ai/v1/chat/completions';
+
+    protected const ADAPTER_TYPE = AdapterType::AI;
 
     public function process(mixed $input): mixed
     {
@@ -19,12 +24,10 @@ class MistralAiAdapter extends AbstractAdapter
             throw new \RuntimeException('Mistral API key is required');
         }
 
-        $endpoint = 'https://api.mistral.ai/v1/chat/completions';
-
         $data = [
             'model' => $this->model,
             'messages' => [
-                ['role' => 'user', 'content' => (string) $input]
+                ['role' => 'user', 'content' => (string)$input]
             ],
             'temperature' => $this->temperature,
             'max_tokens' => $this->maxTokens
@@ -102,5 +105,17 @@ class MistralAiAdapter extends AbstractAdapter
     public function getMaxTokens(): int
     {
         return $this->maxTokens;
+    }
+
+    public function setHostUrl(string $hostUrl): static
+    {
+        $this->hostUrl = $hostUrl;
+
+        return $this;
+    }
+
+    public function getHostUrl(): ?string
+    {
+        return $this->hostUrl;
     }
 }

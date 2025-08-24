@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Piper\Adapter\Io;
 
 use Piper\Adapter\AbstractAdapter;
+use Piper\Contracts\Adapter\AdapterType;
 
 class WriteAdapter extends AbstractAdapter
 {
@@ -13,6 +14,8 @@ class WriteAdapter extends AbstractAdapter
     private string $format = 'json';
     private string $mode = 'w';
     private string $encoding = 'utf-8';
+
+    protected const ADAPTER_TYPE = AdapterType::WRITER;
 
     public function process(mixed $input): mixed
     {

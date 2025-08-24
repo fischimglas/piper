@@ -7,6 +7,7 @@ namespace Piper\Adapter\Translate;
 use DeepL\DeepLException;
 use DeepL\Translator;
 use Piper\Adapter\AbstractAdapter;
+use Piper\Contracts\Adapter\AdapterType;
 
 class DeeplAdapter extends AbstractAdapter
 {
@@ -17,6 +18,8 @@ class DeeplAdapter extends AbstractAdapter
     private string $formality = 'default';
     private bool $preserveFormatting = true;
     private bool $splitSentences = true;
+
+    protected const ADAPTER_TYPE = AdapterType::TRANSLATE;
 
     public function process(mixed $input): mixed
     {

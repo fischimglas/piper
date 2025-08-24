@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Piper\Adapter\Image;
 
 use Piper\Adapter\AbstractAdapter;
+use Piper\Contracts\Adapter\AdapterType;
 
 class ImagineArtAiAdapter extends AbstractAdapter
 {
@@ -15,6 +16,8 @@ class ImagineArtAiAdapter extends AbstractAdapter
     private int $seed = 5;
     private ?string $outputPath = null;
 
+    protected const ADAPTER_TYPE = AdapterType::IMAGE;
+
     public function process(mixed $input): mixed
     {
         if (!$this->apiKey) {
@@ -22,10 +25,10 @@ class ImagineArtAiAdapter extends AbstractAdapter
         }
 
         $postFields = [
-            'prompt' => (string) $input,
+            'prompt' => (string)$input,
             'style' => $this->style,
             'aspect_ratio' => $this->aspectRatio,
-            'seed' => (string) $this->seed,
+            'seed' => (string)$this->seed,
         ];
 
         $ch = curl_init();

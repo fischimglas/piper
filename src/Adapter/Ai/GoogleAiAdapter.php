@@ -8,8 +8,10 @@ use GeminiAPI\Client;
 use GeminiAPI\Resources\ModelName;
 use GeminiAPI\Resources\Parts\TextPart;
 use Piper\Adapter\AbstractAdapter;
+use Piper\Contracts\Adapter\AdapterType;
+use Piper\Contracts\Adapter\AiAdapterInterface;
 
-class GoogleAiAdapter extends AbstractAdapter
+class GoogleAiAdapter extends AbstractAdapter implements AiAdapterInterface
 {
     private ?Client $client = null;
     private ?string $apiKey = null;
@@ -17,6 +19,8 @@ class GoogleAiAdapter extends AbstractAdapter
     private ?string $systemInstruction = null;
     private float $temperature = 0.7;
     private int $maxTokens = 1000;
+    private ?string $hostUrl = null;
+    protected const ADAPTER_TYPE = AdapterType::AI;
 
     public function process(mixed $input): mixed
     {
@@ -32,7 +36,7 @@ class GoogleAiAdapter extends AbstractAdapter
             $model = $model->withSystemInstruction($this->systemInstruction);
         }
 
-        $response = $model->generateContent(new TextPart((string) $input));
+        $response = $model->generateContent(new TextPart((string)$input));
 
         return $response->text();
     }
@@ -101,5 +105,17 @@ class GoogleAiAdapter extends AbstractAdapter
             $this->client = new Client($this->apiKey);
         }
         return $this->client;
+    }
+
+    public function setHostUrl(string $hostUrl): static
+    {
+        $this->hostUrl = $hostUrl;
+
+        return $this;
+    }
+
+    public function getHostUrl(): ?string
+    {
+        return $this->hostUrl;
     }
 }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Core;
 
 use PHPUnit\Framework\TestCase;
-use Piper\Contracts\AdapterInterface;
+use Piper\Contracts\Adapter\AdapterInterface;
 use Piper\Contracts\FilterInterface;
-use Piper\Contracts\StrategyInterface;
+use Piper\Contracts\Workflow\StrategyInterface;
 use Piper\Core\Dependency;
 use Piper\Core\Receipt;
 use Piper\Core\Sequence;
