@@ -4,13 +4,13 @@
 
 Piper ist ein leichtgewichtiges PHP-DAG-Framework zur Orchestrierung von KI- und API-Workflows. Es unterstützt Nodes,
 Pipes (lineare Sequenzen von Nodes) und Graphen als First-Class Citizens mit eigenen Typen und Interfaces sowie weitere Kompositionsmechanismen
-wie `combine`. Im Fokus stehen explizite Abhängigkeiten über Objekt-Referenzen (keine Strings), deklarative, fließende DSL und flexible Workflow-Strukturen.
+wie `combine`. Im Fokus stehen explizite Abhängigkeiten über Objekt-Referenzen (keine Strings), deklarative, fliessende DSL und flexible Workflow-Strukturen.
 
 ## Ablauf
 
 Pipes, Graphen und Kombinatoren verbinden Nodes zu komplexen Workflows. Pipes sind sequenzielle Abläufe, Graphen
 orchestrieren Nodes, Pipes und andere Graphen (alle als eigene, typisierte Objekte), und `combine` ermöglicht parallele Zusammenführungen.
-Nodes, Pipes und Graphen werden ausschließlich über Objekt-Referenzen miteinander verbunden – keine Verknüpfung per String-IDs.
+Nodes, Pipes und Graphen werden ausschliesslich über Objekt-Referenzen miteinander verbunden – keine Verknüpfung per String-IDs.
 Das Framework erkennt automatisch Zyklen im Abhängigkeitsgraphen (DAG) und verhindert deren Ausführung.
 Die Ausführung ist explizit typisiert und unterstützt asynchrone Verarbeitungsschritte.
 
@@ -26,7 +26,7 @@ Combine (Parallel-Kombinator) kann Pipes, Nodes und Graphen zusammenführen
 
 **Beschreibung:** Ein DataBag ist eine strukturierte, typisierte Datenablage, die während der Ausführung von Workflows als universeller Kontext dient. Sie ermöglicht das Speichern, Lesen und Übergeben von Daten zwischen Nodes, Pipes und Graphen, ohne auf globale Variablen oder externe Speicher zurückzugreifen.
 
-- DataBags dienen ausschließlich dem Transport und der Speicherung von Kontextdaten innerhalb eines Workflows.
+- DataBags dienen ausschliesslich dem Transport und der Speicherung von Kontextdaten innerhalb eines Workflows.
 - Jeder ausführbare Workflow-Bestandteil kann mit einem DataBag ausgeführt werden, um Kontextdaten zu transportieren.
 - DataBags können beliebige Schlüssel/Werte aufnehmen, sind typisiert und können im gesamten Workflow weitergereicht werden.
 - DataBags unterstützen das Cloning für isolierte Ausführungen.
@@ -140,7 +140,7 @@ Bildgenerierung, Datenbankzugriffe etc.
   erstellt.
 - Nodes deklarieren ihren Output-Contract mit `yields(Cardinality, ContentType)`.
 - Nodes können Templates, Prozesse, Filter oder Spezialverhalten definieren.
-- **Templates werden ausschließlich in Nodes verwendet** und interpolieren nur explizit als Input deklarierte Abhängigkeiten (z.B. `{{input}}`, `{{andereNode}}`), keine impliziten Referenzen.
+- **Templates werden ausschliesslich in Nodes verwendet** und interpolieren nur explizit als Input deklarierte Abhängigkeiten (z.B. `{{input}}`, `{{andereNode}}`), keine impliziten Referenzen.
 - Abhängigkeiten werden via `dependsOn($nodeOrPipe, Strategy)` angegeben – stets mit Objekt-Referenzen auf Nodes, Pipes oder Graphen (keine String-IDs).
 
 #### Node-Events
@@ -270,7 +270,7 @@ Definiert den Typ des Outputs eines Nodes.
 
 ### Graph
 
-Der Graph yielt nichts und erhält auch keine Input Daten. Er orchestriert nur die Nodes/Pipes.
+Der Graph yielt nichts und erhält auch keine Input-Daten. Er orchestriert nur die Nodes/Pipes.
 
 | Funktion             | Beschreibung                                   |
 |----------------------|------------------------------------------------|
@@ -318,6 +318,34 @@ Eine Node ist eine einzelne Verarbeitungseinheit, die einen klar definierten Out
 | `withLogger(Logger)`               | Fügt dem Graphen oder Pipe einen Logger hinzu.            |
 | `dependsOn(Pipe\|Node, Strategy)`  | Definiert Abhängigkeiten mit Strategie.                   |
 | `yields(Cardinality, ContentType)` | Definiert den Output-Contract (Cardinality, ContentType). |
+
+---
+
+### TemplateEngine
+
+**Beschreibung:**  
+Die TemplateEngine ist für die Interpolation von Platzhaltern in Strings zuständig, insbesondere in Nodes mit Templates (z.B. KI-Text-Nodes). Sie ersetzt Platzhalter wie `{{key}}` oder `{{key.subkey}}` durch Werte aus dem Input, DataBag oder aus Abhängigkeiten. Die Engine unterstützt verschachtelte Arrays/Objekte und optionalen Strict-Modus.
+
+- Templates werden ausschliesslich in Nodes verwendet.
+- Platzhalter-Syntax: `{{ key }}` oder `{{ key.subkey }}`.
+- Werte werden aus Input, DataBag und expliziten Abhängigkeiten aufgelöst.
+- Bei fehlenden Werten bleibt der Platzhalter erhalten oder es wird (im Strict-Modus) eine Exception geworfen.
+- Nicht-String-Werte werden als JSON interpoliert.
+
+#### API
+
+```php
+TemplateEngine::render(string $template, array|object|null $vars, bool $strict = false): string
+```
+
+#### Beispiel
+
+```php
+$template = 'Hallo {{user.name}}, dein Token: {{token}}';
+$vars = ['user' => ['name' => 'Anna'], 'token' => 123];
+$result = TemplateEngine::render($template, $vars);
+// Ergebnis: 'Hallo Anna, dein Token: 123'
+```
 
 ---
 
@@ -450,7 +478,7 @@ print_r([
 ## Designprinzipien
 
 - **Nodes**, **Pipes** und **Graphen** sind jeweils First-Class Citizens mit eigenen, expliziten Typen und Interfaces und können als Objekte beliebig miteinander kombiniert werden.
-- **Abhängigkeiten** werden ausschließlich über Objekt-Referenzen definiert (Nodes, Pipes oder Graphen); String-IDs werden nicht verwendet.
+- **Abhängigkeiten** werden ausschliesslich über Objekt-Referenzen definiert (Nodes, Pipes oder Graphen); String-IDs werden nicht verwendet.
 - Das Framework erkennt und verhindert Zyklen im Abhängigkeitsgraphen (DAG), um fehlerhafte Workflows zu vermeiden.
 - **Pipes** gruppieren Nodes sequenziell; der Output ist der Output des letzten Nodes.
 - **Graphen** orchestrieren Nodes, Pipes und Kombinatoren zu komplexen Workflows und können selbst als Abhängigkeitsziele dienen.
@@ -458,7 +486,7 @@ print_r([
 - **Output-Contract** (Cardinality + ContentType) definiert den Output-Typ jedes Nodes.
 - **Transform- und Decide-Nodes** erlauben flexible Datenumformung und bedingte Ablaufsteuerung.
 - **Logger** können an Graphen oder Pipes angebunden werden, um Ausführung zu überwachen.
-- **Templates** werden ausschließlich in Nodes verwendet, interpolieren nur explizit deklarierte Inputs und erlauben keine impliziten Referenzen.
+- **Templates** werden ausschliesslich in Nodes verwendet, interpolieren nur explizit deklarierte Inputs und erlauben keine impliziten Referenzen.
 - **Verzweigungen** und **bedingte Ausführung** werden über `decide`-Nodes realisiert.
 - **Asynchrone Ausführung** wird unterstützt, wo Adapter oder Node-Implementierungen dies ermöglichen.
 - Die gesamte API ist explizit typisiert für sichere und nachvollziehbare Workflows.
